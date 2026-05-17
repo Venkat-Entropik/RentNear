@@ -1,0 +1,27 @@
+{
+  "name": "@rentnear/api-client",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Type-safe Axios SDK for the RentNear API",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "axios": "^1.7.3",
+    "@rentnear/types": "*"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4"
+  }
+}

@@ -1,0 +1,223 @@
+// ──────────────────────────────────────────────────────────────────────────────
+// apps/api/prisma/schema.prisma
+// RentNear - Schema v2: Auth + Users & KYC
+// ──────────────────────────────────────────────────────────────────────────────
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── Enums ─────────────────────────────────────────────────────────────────────
+
+enum Role {
+  OWNER
+  RENTER
+  ADMIN
+}
+
+enum KycStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum DocType {
+  AADHAAR
+  PAN
+  PASSPORT
+  DRIVING_LICENSE
+}
+
+// ── User ──────────────────────────────────────────────────────────────────────
+// Core user record - created on first successful OTP verification.
+
+model User {
+  id        String    @id @default(cuid())
+  phone     String    @unique
+  email     String?   @unique
+  name      String?
+  avatarUrl String?
+  role      Role      @default(RENTER)
+  kycStatus KycStatus @default(PENDING)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // Relations
+  otpSessions   OtpSession[]
+  refreshTokens RefreshToken[]
+  addresses     Address[]
+  kycDocument   KycDocument?
+  listings      Listing[]
+
+  // Future module stubs
+  // bookings Booking[]  @relation("BookingRenter")
+  // reviews  Review[]
+  // messages Message[]
+
+  @@map("users")
+}
+
+// ── OtpSession ────────────────────────────────────────────────────────────────
+// OTPs are stored HASHED (bcrypt) — raw OTP never persisted.
+
+model OtpSession {
+  id        String   @id @default(cuid())
+  phone     String
+  otpHash   String
+  expiresAt DateTime
+  verified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([phone])
+  @@index([userId])
+  @@map("otp_sessions")
+}
+
+// ── RefreshToken ──────────────────────────────────────────────────────────────
+// SHA-256 hashed — raw token sent to client only once.
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("refresh_tokens")
+}
+
+// ── Address ───────────────────────────────────────────────────────────────────
+// User address book — used for listing proximity calculations.
+
+model Address {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label     String   // "Home", "Work", "Other"
+  street    String
+  city      String
+  state     String
+  pincode   String
+  lat       Float?
+  lng       Float?
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@map("addresses")
+}
+
+// ── KycDocument ───────────────────────────────────────────────────────────────
+// One KYC record per user — admin reviews and flips kycStatus on User.
+
+model KycDocument {
+  id          String    @id @default(cuid())
+  userId      String    @unique
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  docType     DocType
+  docNumber   String
+  frontUrl    String
+  backUrl     String?
+  selfieUrl   String?
+  status      KycStatus @default(PENDING)
+  reviewNote  String?
+  submittedAt DateTime  @default(now())
+  reviewedAt  DateTime?
+
+  @@map("kyc_documents")
+}
+
+// ── ListingCategory ───────────────────────────────────────────────────────────
+// Seeded at startup — admin-managed category taxonomy.
+
+model ListingCategory {
+  id       String    @id @default(cuid())
+  name     String    @unique
+  icon     String?   // emoji or icon name
+  listings Listing[]
+
+  @@map("listing_categories")
+}
+
+// ── Listing ───────────────────────────────────────────────────────────────────
+// Core marketplace item. Draft until isPublished = true.
+
+model Listing {
+  id          String          @id @default(cuid())
+  ownerId     String
+  owner       User            @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  categoryId  String
+  category    ListingCategory @relation(fields: [categoryId], references: [id])
+  title       String
+  description String
+  pricePerDay Decimal         @db.Decimal(10, 2)
+  deposit     Decimal?        @db.Decimal(10, 2)
+  isPublished Boolean         @default(false)
+  city        String
+  state       String
+  pincode     String
+  lat         Float?
+  lng         Float?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  media        ListingMedia[]
+  availability Availability[]
+  // bookings  Booking[]   -- Step 5
+  // reviews   Review[]    -- Step 8
+
+  @@index([ownerId])
+  @@index([categoryId])
+  @@index([city])
+  @@map("listings")
+}
+
+// ── ListingMedia ──────────────────────────────────────────────────────────────
+// Photos uploaded to Cloudflare R2 via presigned URLs.
+
+model ListingMedia {
+  id        String   @id @default(cuid())
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  url       String   // R2 public URL
+  r2Key     String   // R2 object key (for deletion)
+  order     Int      @default(0)
+  isPrimary Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([listingId])
+  @@map("listing_media")
+}
+
+// ── Availability ──────────────────────────────────────────────────────────────
+// Per-date availability grid. false = available, true = blocked/booked.
+
+model Availability {
+  id        String   @id @default(cuid())
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  date      DateTime @db.Date
+  isBlocked Boolean  @default(false)
+
+  @@unique([listingId, date])
+  @@index([listingId])
+  @@map("availability")
+}
+
+// ── Future Models ─────────────────────────────────────────────────────────────
+// model Booking { ... }    -- Step 5: Booking Engine
+// model Payment { ... }    -- Step 6: Razorpay
+// model Review { ... }     -- Step 8: Reviews
+// model Message { ... }    -- Step 9: Live Chat
+// model Dispute { ... }    -- Step 10: Disputes
