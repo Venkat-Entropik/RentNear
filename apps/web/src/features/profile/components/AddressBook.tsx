@@ -52,10 +52,7 @@ export function AddressBook() {
       ) : (
         <div className="space-y-3">
           {addresses.map((addr) => (
-            <div
-              key={addr.id}
-              className="white-card flex items-start justify-between p-4"
-            >
+            <div key={addr.id} className="white-card flex items-start justify-between p-4">
               <div className="flex items-start gap-3">
                 <div className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-primary-50">
                   <MapPin className="h-4 w-4 text-primary-500" />

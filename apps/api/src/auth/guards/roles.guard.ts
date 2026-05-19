@@ -13,7 +13,7 @@ export class RolesGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
-    
+
     if (!requiredRoles || requiredRoles.length === 0) {
       return true;
     }
@@ -24,7 +24,7 @@ export class RolesGuard implements CanActivate {
     if (!user) return false;
 
     // Assume user.role is added to JwtPayload. If not, we might need to fetch the user or ensure it's in the payload.
-    // For now, let's assume `role` is stored in the JWT or we just query the DB. 
+    // For now, let's assume `role` is stored in the JWT or we just query the DB.
     // Actually, in schema.prisma, we added `Role` enum. We should include `role` in JwtPayload.
     return requiredRoles.includes(user.role as Role);
   }

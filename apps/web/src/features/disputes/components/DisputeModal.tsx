@@ -54,7 +54,9 @@ export function DisputeModal({ isOpen, onClose, bookingId }: DisputeModalProps) 
         </div>
 
         <p className="mb-6 text-sm text-neutral-600">
-          If there was a significant problem with this booking (e.g., item damaged, not returned, or fake listing), please describe the issue in detail. Our Trust & Safety team will review the case.
+          If there was a significant problem with this booking (e.g., item damaged, not returned, or
+          fake listing), please describe the issue in detail. Our Trust & Safety team will review
+          the case.
         </p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -68,9 +70,7 @@ export function DisputeModal({ isOpen, onClose, bookingId }: DisputeModalProps) 
               placeholder="Please explain what happened..."
               className={`input-field ${errors.reason ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`}
             />
-            {errors.reason && (
-              <p className="mt-1 text-sm text-red-500">{errors.reason.message}</p>
-            )}
+            {errors.reason && <p className="mt-1 text-sm text-red-500">{errors.reason.message}</p>}
           </div>
 
           <div className="flex justify-end gap-3 pt-4">

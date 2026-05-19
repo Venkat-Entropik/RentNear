@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Patch, Body, Query, UseGuards, ParseIntPipe, DefaultValuePipe, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Body,
+  Query,
+  UseGuards,
+  ParseIntPipe,
+  DefaultValuePipe,
+  Param,
+} from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
@@ -43,7 +54,11 @@ export class AdminController {
   @Post('promote-me')
   async promoteMe(@CurrentUser() user: JwtPayload) {
     await this.adminService.promoteToAdmin(user.sub);
-    return { success: true, message: 'You have been promoted to ADMIN. Please log out and log back in to get a fresh JWT.' };
+    return {
+      success: true,
+      message:
+        'You have been promoted to ADMIN. Please log out and log back in to get a fresh JWT.',
+    };
   }
 
   @Get('disputes')
@@ -59,10 +74,7 @@ export class AdminController {
   @Patch('disputes/:id')
   @UseGuards(RolesGuard)
   @Roles(Role.ADMIN)
-  updateDispute(
-    @Param('id') id: string,
-    @Body() data: { status: string; adminNotes?: string },
-  ) {
+  updateDispute(@Param('id') id: string, @Body() data: { status: string; adminNotes?: string }) {
     return this.adminService.updateDispute(id, data);
   }
 }

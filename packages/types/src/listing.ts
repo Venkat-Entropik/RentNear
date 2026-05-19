@@ -63,7 +63,7 @@ export interface UpdateListingInput extends Partial<CreateListingInput> {
 /** Returned after POST /listings/:id/media/presign */
 export interface PresignedUrlResponse {
   uploadUrl: string; // PUT to this URL with the file as body
-  r2Key: string;     // store and send back to confirmMedia
+  r2Key: string; // store and send back to confirmMedia
   publicUrl: string; // final permanent URL once upload succeeds
 }
 

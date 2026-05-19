@@ -36,7 +36,15 @@ export function CreateListingView() {
   };
 
   // Step 2 → 3: create the draft
-  const handleLocation = async ({ city, state, pincode }: { city: string; state: string; pincode: string }) => {
+  const handleLocation = async ({
+    city,
+    state,
+    pincode,
+  }: {
+    city: string;
+    state: string;
+    pincode: string;
+  }) => {
     const payload = { ...details, city, state, pincode } as CreateListingValues;
 
     if (!listing) {
@@ -77,7 +85,9 @@ export function CreateListingView() {
           </div>
           <div className="flex w-full flex-col gap-2">
             <button
-              onClick={() => router.push(`/listings/${listing.id}` as Parameters<typeof router.push>[0])}
+              onClick={() =>
+                router.push(`/listings/${listing.id}` as Parameters<typeof router.push>[0])
+              }
               className="btn-primary w-full"
             >
               View Listing
@@ -113,9 +123,7 @@ export function CreateListingView() {
       </div>
 
       <div className="white-card p-6">
-        {step === 'details' && (
-          <CreateListingForm defaultValues={details} onNext={handleDetails} />
-        )}
+        {step === 'details' && <CreateListingForm defaultValues={details} onNext={handleDetails} />}
         {step === 'location' && (
           <LocationStep
             defaultValues={

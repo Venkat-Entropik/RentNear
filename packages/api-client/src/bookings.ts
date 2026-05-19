@@ -5,7 +5,10 @@ import type { BookingPublic, CreateBookingInput, UpdateBookingStatusInput } from
  * POST /listings/:id/bookings
  * Create a new booking request.
  */
-export async function createBooking(listingId: string, input: CreateBookingInput): Promise<BookingPublic> {
+export async function createBooking(
+  listingId: string,
+  input: CreateBookingInput,
+): Promise<BookingPublic> {
   const res = await apiClient.post<BookingPublic>(`/listings/${listingId}/bookings`, input);
   return res.data;
 }
@@ -32,7 +35,10 @@ export async function getOwnerRequests(): Promise<BookingPublic[]> {
  * PATCH /bookings/:id/status
  * Update the status of a booking (confirm, reject, cancel).
  */
-export async function updateBookingStatus(bookingId: string, input: UpdateBookingStatusInput): Promise<BookingPublic> {
+export async function updateBookingStatus(
+  bookingId: string,
+  input: UpdateBookingStatusInput,
+): Promise<BookingPublic> {
   const res = await apiClient.patch<BookingPublic>(`/bookings/${bookingId}/status`, input);
   return res.data;
 }

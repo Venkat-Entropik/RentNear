@@ -1,4 +1,10 @@
-import { Injectable, BadRequestException, NotFoundException, ForbiddenException, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+  ForbiddenException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
 import { VerifyPaymentDto } from './dto/verify-payment.dto';
@@ -26,7 +32,9 @@ export class PaymentsService {
         key_secret,
       });
     } else {
-      console.warn('Razorpay keys not found in environment variables. Payment integration will fail.');
+      console.warn(
+        'Razorpay keys not found in environment variables. Payment integration will fail.',
+      );
     }
   }
 

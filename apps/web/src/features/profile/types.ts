@@ -28,9 +28,7 @@ export const createAddressSchema = z.object({
   street: z.string().min(1, 'Street address is required').max(200),
   city: z.string().min(1, 'City is required').max(80),
   state: z.string().min(1, 'State is required').max(80),
-  pincode: z
-    .string()
-    .regex(/^\d{6}$/, 'Pincode must be exactly 6 digits'),
+  pincode: z.string().regex(/^\d{6}$/, 'Pincode must be exactly 6 digits'),
   isDefault: z.boolean().optional(),
 });
 
@@ -40,10 +38,7 @@ export type CreateAddressValues = z.infer<typeof createAddressSchema>;
 
 export const submitKycSchema = z.object({
   docType: z.nativeEnum(DocType),
-  docNumber: z
-    .string()
-    .min(8, 'Document number too short')
-    .max(20, 'Document number too long'),
+  docNumber: z.string().min(8, 'Document number too short').max(20, 'Document number too long'),
   frontUrl: z.string().url('Front image URL is required'),
   backUrl: z.string().url('Enter a valid URL').optional().or(z.literal('')),
   selfieUrl: z.string().url('Enter a valid URL').optional().or(z.literal('')),

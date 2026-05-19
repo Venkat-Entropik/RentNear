@@ -57,7 +57,9 @@ export function ListingCard({ listing }: ListingCardProps) {
           </h3>
           <div className="mt-1 flex items-center gap-1 text-xs text-neutral-500">
             <MapPin className="h-3 w-3 flex-shrink-0" />
-            <span className="line-clamp-1">{listing.city}, {listing.state}</span>
+            <span className="line-clamp-1">
+              {listing.city}, {listing.state}
+            </span>
           </div>
 
           <div className="mt-3 flex items-end justify-between">

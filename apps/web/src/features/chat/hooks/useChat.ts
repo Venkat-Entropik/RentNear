@@ -41,7 +41,8 @@ export function useChatSocket(conversationId: string | null) {
     if (!accessToken) return;
 
     // Use environment variable for WebSocket URL, fallback to localhost for dev
-    const wsUrl = process.env['NEXT_PUBLIC_API_URL']?.replace('http', 'ws') || 'ws://localhost:3001';
+    const wsUrl =
+      process.env['NEXT_PUBLIC_API_URL']?.replace('http', 'ws') || 'ws://localhost:3001';
 
     const newSocket = io(`${wsUrl}/chat`, {
       auth: { token: accessToken },
@@ -76,7 +77,7 @@ export function useChatSocket(conversationId: string | null) {
         if (!oldData) return oldData;
         const index = oldData.findIndex((c: any) => c.id === conversationId);
         if (index === -1) return oldData;
-        
+
         const newConversations = [...oldData];
         newConversations[index] = {
           ...newConversations[index],
@@ -86,7 +87,7 @@ export function useChatSocket(conversationId: string | null) {
         // Move updated conversation to top
         const updatedConv = newConversations.splice(index, 1)[0];
         newConversations.unshift(updatedConv);
-        
+
         return newConversations;
       });
     });

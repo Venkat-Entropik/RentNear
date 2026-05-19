@@ -8,7 +8,11 @@ import { BookingStatus } from '@rentnear/types';
 
 export default function TripsPage() {
   const { data: trips, isLoading } = useMyTrips();
-  const { mutate: updateStatus, isPending: isUpdating, variables: updatingVars } = useUpdateBookingStatus();
+  const {
+    mutate: updateStatus,
+    isPending: isUpdating,
+    variables: updatingVars,
+  } = useUpdateBookingStatus();
 
   if (isLoading) {
     return (
@@ -29,7 +33,10 @@ export default function TripsPage() {
         <div className="white-card flex flex-col items-center gap-3 py-16 text-center">
           <Palmtree className="h-10 w-10 text-neutral-300" />
           <p className="text-sm text-neutral-600">No trips booked yet.</p>
-          <Link href="/listings" className="text-sm font-medium text-primary-500 hover:text-primary-600">
+          <Link
+            href="/listings"
+            className="text-sm font-medium text-primary-500 hover:text-primary-600"
+          >
             Start exploring →
           </Link>
         </div>
@@ -39,7 +46,9 @@ export default function TripsPage() {
             <TripCard
               key={trip.id}
               booking={trip}
-              onCancel={() => updateStatus({ bookingId: trip.id, input: { status: BookingStatus.CANCELLED } })}
+              onCancel={() =>
+                updateStatus({ bookingId: trip.id, input: { status: BookingStatus.CANCELLED } })
+              }
               isCancelling={isUpdating && updatingVars?.bookingId === trip.id}
             />
           ))}

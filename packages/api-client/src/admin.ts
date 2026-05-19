@@ -21,7 +21,9 @@ export async function getAdminUsers(page = 1, limit = 20): Promise<AdminUsersPag
  * GET /admin/listings
  */
 export async function getAdminListings(page = 1, limit = 20): Promise<AdminListingsPage> {
-  const res = await apiClient.get<AdminListingsPage>('/admin/listings', { params: { page, limit } });
+  const res = await apiClient.get<AdminListingsPage>('/admin/listings', {
+    params: { page, limit },
+  });
   return res.data;
 }
 

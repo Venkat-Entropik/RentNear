@@ -5,7 +5,16 @@
 // ──────────────────────────────────────────────────────────────────────────────
 
 import { useState } from 'react';
-import { MapPin, ChevronLeft, ChevronRight, Star, Calendar, Phone, Loader2, AlertCircle } from 'lucide-react';
+import {
+  MapPin,
+  ChevronLeft,
+  ChevronRight,
+  Star,
+  Calendar,
+  Phone,
+  Loader2,
+  AlertCircle,
+} from 'lucide-react';
 import { useListing } from './hooks/useListings';
 
 import { BookingWidget } from '@/features/bookings/components/BookingWidget';
@@ -112,8 +121,16 @@ export function ListingDetailView({ id }: { id: string }) {
                 </span>
               </div>
               <div>
-                <p className="font-semibold text-neutral-900">Hosted by {listing.ownerName ?? 'Owner'}</p>
-                <p className="text-sm text-neutral-500">Listed {new Date(listing.createdAt).toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })}</p>
+                <p className="font-semibold text-neutral-900">
+                  Hosted by {listing.ownerName ?? 'Owner'}
+                </p>
+                <p className="text-sm text-neutral-500">
+                  Listed{' '}
+                  {new Date(listing.createdAt).toLocaleDateString('en-IN', {
+                    month: 'long',
+                    year: 'numeric',
+                  })}
+                </p>
               </div>
             </div>
 
@@ -130,9 +147,7 @@ export function ListingDetailView({ id }: { id: string }) {
           {/* Description */}
           <div className="mb-6">
             <h2 className="text-h3 mb-3 text-neutral-900">About this item</h2>
-            <p className="whitespace-pre-line text-body text-neutral-700">
-              {listing.description}
-            </p>
+            <p className="whitespace-pre-line text-body text-neutral-700">{listing.description}</p>
           </div>
 
           {/* Reviews Section */}
@@ -164,7 +179,9 @@ export function ListingDetailView({ id }: { id: string }) {
               ) : (
                 <div className="text-center py-10 bg-neutral-50 rounded-2xl">
                   <p className="text-neutral-500 font-medium">No reviews yet.</p>
-                  <p className="text-neutral-400 text-sm mt-1">Be the first to rent and review this item.</p>
+                  <p className="text-neutral-400 text-sm mt-1">
+                    Be the first to rent and review this item.
+                  </p>
                 </div>
               )}
             </div>
@@ -173,19 +190,17 @@ export function ListingDetailView({ id }: { id: string }) {
           {/* Description */}
           <div className="mb-6">
             <h2 className="text-h3 mb-3 text-neutral-900">About this item</h2>
-            <p className="whitespace-pre-line text-body text-neutral-700">
-              {listing.description}
-            </p>
+            <p className="whitespace-pre-line text-body text-neutral-700">{listing.description}</p>
           </div>
         </div>
 
         {/* Right column: Booking Widget */}
         <div className="relative">
           <div className="sticky top-6">
-            <BookingWidget 
-              listingId={listing.id} 
-              pricePerDay={Number(listing.pricePerDay)} 
-              deposit={listing.deposit ? Number(listing.deposit) : undefined} 
+            <BookingWidget
+              listingId={listing.id}
+              pricePerDay={Number(listing.pricePerDay)}
+              deposit={listing.deposit ? Number(listing.deposit) : undefined}
             />
           </div>
         </div>

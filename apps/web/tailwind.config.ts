@@ -32,7 +32,7 @@ const config: Config = {
           400: '#9CA3AF',
           200: '#E5E7EB',
           100: '#F2F4F7',
-          50:  '#F7F9FA',
+          50: '#F7F9FA',
         },
         // Background
         bg: {
@@ -51,10 +51,10 @@ const config: Config = {
         sans: ['Inter', 'SF Pro', 'system-ui', 'sans-serif'],
       },
       fontSize: {
-        hero:    ['24px', { lineHeight: '32px', fontWeight: '700' }],
-        h2:      ['20px', { lineHeight: '28px', fontWeight: '600' }],
-        h3:      ['18px', { lineHeight: '26px', fontWeight: '600' }],
-        body:    ['15px', { lineHeight: '22px', fontWeight: '400' }],
+        hero: ['24px', { lineHeight: '32px', fontWeight: '700' }],
+        h2: ['20px', { lineHeight: '28px', fontWeight: '600' }],
+        h3: ['18px', { lineHeight: '26px', fontWeight: '600' }],
+        body: ['15px', { lineHeight: '22px', fontWeight: '400' }],
         'body-sm': ['14px', { lineHeight: '20px', fontWeight: '400' }],
         caption: ['12px', { lineHeight: '16px', fontWeight: '400' }],
       },
@@ -63,37 +63,37 @@ const config: Config = {
         pill: '100px',
         card: '16px',
         input: '12px',
-        chip:  '8px',
+        chip: '8px',
       },
       // ── Animations ────────────────────────────────────────────────────────
       keyframes: {
         'fade-up': {
-          '0%':   { opacity: '0', transform: 'translateY(12px)' },
+          '0%': { opacity: '0', transform: 'translateY(12px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
         'fade-in': {
-          '0%':   { opacity: '0' },
+          '0%': { opacity: '0' },
           '100%': { opacity: '1' },
         },
         shake: {
           '0%, 100%': { transform: 'translateX(0)' },
-          '25%':      { transform: 'translateX(-5px)' },
-          '75%':      { transform: 'translateX(5px)' },
+          '25%': { transform: 'translateX(-5px)' },
+          '75%': { transform: 'translateX(5px)' },
         },
         'slide-up': {
-          '0%':   { opacity: '0', transform: 'translateY(24px)' },
+          '0%': { opacity: '0', transform: 'translateY(24px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
       },
       animation: {
-        'fade-up':  'fade-up 0.35s ease-out forwards',
-        'fade-in':  'fade-in 0.25s ease-out forwards',
-        shake:      'shake 0.3s ease-in-out',
+        'fade-up': 'fade-up 0.35s ease-out forwards',
+        'fade-in': 'fade-in 0.25s ease-out forwards',
+        shake: 'shake 0.3s ease-in-out',
         'slide-up': 'slide-up 0.4s ease-out forwards',
       },
       // ── Box Shadows ───────────────────────────────────────────────────────
       boxShadow: {
-        card:  '0 2px 8px rgba(0,0,0,0.06)',
+        card: '0 2px 8px rgba(0,0,0,0.06)',
         'card-hover': '0 4px 16px rgba(0,0,0,0.10)',
         input: '0 1px 3px rgba(0,0,0,0.04)',
       },

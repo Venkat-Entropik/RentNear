@@ -35,7 +35,10 @@ export function AuthCard({ children }: AuthCardProps) {
       {/* Footer */}
       <p className="relative z-10 mt-8 text-center text-xs text-neutral-400">
         By continuing, you agree to our{' '}
-        <a href="/terms" className="text-neutral-600 underline underline-offset-2 hover:text-neutral-900">
+        <a
+          href="/terms"
+          className="text-neutral-600 underline underline-offset-2 hover:text-neutral-900"
+        >
           Terms
         </a>{' '}
         and{' '}

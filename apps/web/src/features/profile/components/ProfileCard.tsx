@@ -109,21 +109,13 @@ export function ProfileCard() {
       {!editing ? (
         <dl className="space-y-3">
           <InfoRow icon={<Phone className="h-4 w-4" />} label="Phone" value={profile.phone} />
-          <InfoRow
-            icon={<Mail className="h-4 w-4" />}
-            label="Email"
-            value={profile.email ?? '—'}
-          />
+          <InfoRow icon={<Mail className="h-4 w-4" />} label="Email" value={profile.email ?? '—'} />
         </dl>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {/* Name */}
           <FormField label="Full Name" error={errors.name?.message}>
-            <input
-              {...register('name')}
-              className="input-field"
-              placeholder="Arjun Kumar"
-            />
+            <input {...register('name')} className="input-field" placeholder="Arjun Kumar" />
           </FormField>
 
           {/* Email */}
@@ -158,7 +150,11 @@ export function ProfileCard() {
             disabled={isPending}
             className="btn-primary flex items-center gap-2"
           >
-            {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
+            {isPending ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Check className="h-4 w-4" />
+            )}
             Save Changes
           </button>
         </form>
@@ -169,15 +165,7 @@ export function ProfileCard() {
 
 // ── Sub-components ─────────────────────────────────────────────────────────────
 
-function InfoRow({
-  icon,
-  label,
-  value,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-}) {
+function InfoRow({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
     <div className="flex items-center gap-3">
       <span className="text-neutral-400">{icon}</span>

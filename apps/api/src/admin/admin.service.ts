@@ -95,7 +95,7 @@ export class AdminService {
       totalPages: Math.ceil(total / limit),
     };
   }
-  
+
   // Temporary method to promote a user to admin for testing
   async promoteToAdmin(userId: string) {
     return this.prisma.user.update({
@@ -133,11 +133,13 @@ export class AdminService {
         adminNotes: d.adminNotes,
         createdAt: d.createdAt.toISOString(),
         updatedAt: d.updatedAt.toISOString(),
-        booking: d.booking ? {
-          id: d.booking.id,
-          status: d.booking.status,
-          ...(d.booking.listing ? { listing: d.booking.listing } : {}),
-        } : undefined,
+        booking: d.booking
+          ? {
+              id: d.booking.id,
+              status: d.booking.status,
+              ...(d.booking.listing ? { listing: d.booking.listing } : {}),
+            }
+          : undefined,
         initiator: d.initiator,
       })),
       total,
@@ -158,20 +160,22 @@ export class AdminService {
     });
 
     return {
-        id: dispute.id,
-        bookingId: dispute.bookingId,
-        initiatorId: dispute.initiatorId,
-        reason: dispute.reason,
-        status: dispute.status,
-        adminNotes: dispute.adminNotes,
-        createdAt: dispute.createdAt.toISOString(),
-        updatedAt: dispute.updatedAt.toISOString(),
-        booking: dispute.booking ? {
-          id: dispute.booking.id,
-          status: dispute.booking.status,
-          ...(dispute.booking.listing ? { listing: dispute.booking.listing } : {}),
-        } : undefined,
-        initiator: dispute.initiator,
+      id: dispute.id,
+      bookingId: dispute.bookingId,
+      initiatorId: dispute.initiatorId,
+      reason: dispute.reason,
+      status: dispute.status,
+      adminNotes: dispute.adminNotes,
+      createdAt: dispute.createdAt.toISOString(),
+      updatedAt: dispute.updatedAt.toISOString(),
+      booking: dispute.booking
+        ? {
+            id: dispute.booking.id,
+            status: dispute.booking.status,
+            ...(dispute.booking.listing ? { listing: dispute.booking.listing } : {}),
+          }
+        : undefined,
+      initiator: dispute.initiator,
     };
   }
 }

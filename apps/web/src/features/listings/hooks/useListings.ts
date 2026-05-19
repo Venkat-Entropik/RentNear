@@ -34,7 +34,11 @@ export const listingKeys = {
 };
 
 export function useCategories() {
-  return useQuery({ queryKey: listingKeys.categories, queryFn: getCategories, staleTime: Infinity });
+  return useQuery({
+    queryKey: listingKeys.categories,
+    queryFn: getCategories,
+    staleTime: Infinity,
+  });
 }
 
 export function useListings(query: ListingsQuery = {}) {
@@ -61,7 +65,9 @@ export function useCreateListing() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (input: CreateListingInput) => createListing(input),
-    onSuccess: () => { void qc.invalidateQueries({ queryKey: listingKeys.mine }); },
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: listingKeys.mine });
+    },
   });
 }
 
@@ -92,7 +98,9 @@ export function useDeleteListing() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => deleteListing(id),
-    onSuccess: () => { void qc.invalidateQueries({ queryKey: listingKeys.mine }); },
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: listingKeys.mine });
+    },
   });
 }
 

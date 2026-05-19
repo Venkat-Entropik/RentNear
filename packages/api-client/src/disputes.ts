@@ -4,7 +4,10 @@ import type { DisputePublic, DisputesPage } from '@rentnear/types';
 /**
  * POST /disputes
  */
-export async function createDispute(data: { bookingId: string; reason: string }): Promise<DisputePublic> {
+export async function createDispute(data: {
+  bookingId: string;
+  reason: string;
+}): Promise<DisputePublic> {
   const res = await apiClient.post<DisputePublic>('/disputes', data);
   return res.data;
 }
@@ -28,7 +31,10 @@ export async function getAdminDisputes(page = 1, limit = 20): Promise<DisputesPa
 /**
  * PATCH /admin/disputes/:id
  */
-export async function updateDisputeStatus(id: string, data: { status: string; adminNotes?: string }): Promise<DisputePublic> {
+export async function updateDisputeStatus(
+  id: string,
+  data: { status: string; adminNotes?: string },
+): Promise<DisputePublic> {
   const res = await apiClient.patch<DisputePublic>(`/admin/disputes/${id}`, data);
   return res.data;
 }

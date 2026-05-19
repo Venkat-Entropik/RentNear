@@ -17,7 +17,7 @@ interface RequestCardProps {
 export function RequestCard({ booking, onApprove, onReject, isUpdating }: RequestCardProps) {
   const router = useRouter();
   const [isDisputeModalOpen, setIsDisputeModalOpen] = useState(false);
-  
+
   const listing = booking.listing;
   const renter = booking.renter;
   if (!listing || !renter) return null;
@@ -32,7 +32,9 @@ export function RequestCard({ booking, onApprove, onReject, isUpdating }: Reques
             <User className="h-5 w-5" />
           </div>
           <div>
-            <p className="font-semibold text-neutral-900">{renter.name || 'A user'} wants to rent</p>
+            <p className="font-semibold text-neutral-900">
+              {renter.name || 'A user'} wants to rent
+            </p>
             <p className="text-sm font-medium text-primary-600">{listing.title}</p>
           </div>
         </div>
@@ -41,17 +43,22 @@ export function RequestCard({ booking, onApprove, onReject, isUpdating }: Reques
       <div className="p-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <p className="text-xs text-neutral-500 uppercase font-bold tracking-wider mb-1">Dates</p>
+            <p className="text-xs text-neutral-500 uppercase font-bold tracking-wider mb-1">
+              Dates
+            </p>
             <div className="flex items-center gap-1.5 text-sm font-medium text-neutral-900">
               <Calendar className="h-4 w-4 text-neutral-400" />
-              {format(parseISO(booking.startDate), 'MMM d')} - {format(parseISO(booking.endDate), 'MMM d')}
+              {format(parseISO(booking.startDate), 'MMM d')} -{' '}
+              {format(parseISO(booking.endDate), 'MMM d')}
               <span className="ml-1 rounded-full bg-neutral-100 px-2 py-0.5 text-xs text-neutral-600">
                 {days} days
               </span>
             </div>
           </div>
           <div>
-            <p className="text-xs text-neutral-500 uppercase font-bold tracking-wider mb-1">Earnings</p>
+            <p className="text-xs text-neutral-500 uppercase font-bold tracking-wider mb-1">
+              Earnings
+            </p>
             <p className="text-lg font-bold text-success">
               ₹{Number(booking.totalPrice).toLocaleString('en-IN')}
             </p>

@@ -22,11 +22,7 @@ interface AuthState {
   pendingPhone: string | null;
 
   // ── Actions ──────────────────────────────────────────────────────────────
-  setCredentials: (params: {
-    user: UserPublic;
-    accessToken: string;
-    refreshToken: string;
-  }) => void;
+  setCredentials: (params: { user: UserPublic; accessToken: string; refreshToken: string }) => void;
   setPendingPhone: (phone: string) => void;
   setStep: (step: AuthStep) => void;
   logout: () => void;

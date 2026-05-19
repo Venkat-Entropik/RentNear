@@ -1,5 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createBooking, getMyTrips, getOwnerRequests, updateBookingStatus } from '@rentnear/api-client';
+import {
+  createBooking,
+  getMyTrips,
+  getOwnerRequests,
+  updateBookingStatus,
+} from '@rentnear/api-client';
 import type { CreateBookingInput, UpdateBookingStatusInput, BookingPublic } from '@rentnear/types';
 
 export const bookingsKeys = {

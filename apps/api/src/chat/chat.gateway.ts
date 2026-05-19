@@ -66,11 +66,15 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     try {
       // Create message in DB
-      const message = await this.chatService.createMessage(userId, data.conversationId, data.content);
+      const message = await this.chatService.createMessage(
+        userId,
+        data.conversationId,
+        data.content,
+      );
 
       // Broadcast to everyone in the conversation room (including the sender)
       this.server.to(`conversation_${data.conversationId}`).emit('newMessage', message);
-      
+
       // Also broadcast a generic notification event for Inbox updating
       // In a real app we might want to emit to specific user rooms (e.g. `user_${ownerId}`)
       // For now, we emit to the conversation room.
