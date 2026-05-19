@@ -26,11 +26,33 @@ enum KycStatus {
   REJECTED
 }
 
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  REJECTED
+  CANCELLED
+  COMPLETED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
 enum DocType {
   AADHAAR
   PAN
   PASSPORT
   DRIVING_LICENSE
+}
+
+enum DisputeStatus {
+  OPEN
+  UNDER_REVIEW
+  RESOLVED
+  CLOSED
 }
 
 // ── User ──────────────────────────────────────────────────────────────────────
@@ -53,11 +75,14 @@ model User {
   addresses     Address[]
   kycDocument   KycDocument?
   listings      Listing[]
+  bookings      Booking[]      @relation("BookingRenter")
+  payments      Payment[]
+  reviews       Review[]
 
-  // Future module stubs
-  // bookings Booking[]  @relation("BookingRenter")
-  // reviews  Review[]
-  // messages Message[]
+  conversationsAsRenter Conversation[] @relation("RenterConversations")
+  conversationsAsOwner  Conversation[] @relation("OwnerConversations")
+  messages              Message[]
+  disputes              Dispute[]
 
   @@map("users")
 }
@@ -169,13 +194,16 @@ model Listing {
   pincode     String
   lat         Float?
   lng         Float?
+  rating      Float           @default(0)
+  reviewCount Int             @default(0)
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
 
   media        ListingMedia[]
   availability Availability[]
-  // bookings  Booking[]   -- Step 5
-  // reviews   Review[]    -- Step 8
+  bookings     Booking[]
+  reviews      Review[]
+  conversations Conversation[]
 
   @@index([ownerId])
   @@index([categoryId])
@@ -215,9 +243,119 @@ model Availability {
   @@map("availability")
 }
 
-// ── Future Models ─────────────────────────────────────────────────────────────
-// model Booking { ... }    -- Step 5: Booking Engine
-// model Payment { ... }    -- Step 6: Razorpay
-// model Review { ... }     -- Step 8: Reviews
-// model Message { ... }    -- Step 9: Live Chat
-// model Dispute { ... }    -- Step 10: Disputes
+// ── Booking ───────────────────────────────────────────────────────────────────
+// Core transaction model bridging Listing and Renter.
+
+model Booking {
+  id          String        @id @default(cuid())
+  listingId   String
+  listing     Listing       @relation(fields: [listingId], references: [id])
+  renterId    String
+  renter      User          @relation("BookingRenter", fields: [renterId], references: [id])
+  startDate   DateTime      @db.Date
+  endDate     DateTime      @db.Date
+  totalPrice  Decimal       @db.Decimal(10, 2)
+  status      BookingStatus @default(PENDING)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  payment     Payment?
+  disputes    Dispute[]
+
+  @@index([listingId])
+  @@index([renterId])
+  @@map("bookings")
+}
+
+// ── Payment ───────────────────────────────────────────────────────────────────
+// Follows Razorpay payment lifecycle for a confirmed booking.
+
+model Payment {
+  id                String        @id @default(cuid())
+  bookingId         String        @unique
+  booking           Booking       @relation(fields: [bookingId], references: [id])
+  userId            String
+  user              User          @relation(fields: [userId], references: [id])
+  amount            Decimal       @db.Decimal(10, 2)
+  razorpayOrderId   String?       @unique
+  razorpayPaymentId String?       @unique
+  razorpaySignature String?
+  status            PaymentStatus @default(PENDING)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  @@map("payments")
+}
+
+// ── Review ────────────────────────────────────────────────────────────────────
+// Reviews left by renters on a listing after completing a booking.
+
+model Review {
+  id        String   @id @default(cuid())
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rating    Int
+  comment   String   @db.Text
+  createdAt DateTime @default(now())
+
+  @@unique([listingId, userId])
+  @@index([listingId])
+  @@map("reviews")
+}
+
+// ── Live Chat (Messaging) ──────────────────────────────────────────────────────
+
+model Conversation {
+  id        String   @id @default(cuid())
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  renterId  String
+  renter    User     @relation("RenterConversations", fields: [renterId], references: [id], onDelete: Cascade)
+  ownerId   String
+  owner     User     @relation("OwnerConversations", fields: [ownerId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt // Updated whenever a new message is sent
+
+  messages  Message[]
+
+  @@unique([listingId, renterId]) // One conversation per renter per listing
+  @@index([renterId])
+  @@index([ownerId])
+  @@map("conversations")
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  content        String       @db.Text
+  isRead         Boolean      @default(false)
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId])
+  @@index([senderId])
+  @@map("messages")
+}
+
+// ── Trust & Safety (Disputes) ────────────────────────────────────────────────
+
+model Dispute {
+  id          String        @id @default(cuid())
+  bookingId   String
+  booking     Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  initiatorId String
+  initiator   User          @relation(fields: [initiatorId], references: [id], onDelete: Cascade)
+  reason      String        @db.Text
+  status      DisputeStatus @default(OPEN)
+  adminNotes  String?       @db.Text
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([bookingId])
+  @@index([initiatorId])
+  @@map("disputes")
+}

@@ -35,6 +35,8 @@ export interface ListingPublic {
   lat: number | null;
   lng: number | null;
   media: ListingMediaPublic[];
+  rating: number;
+  reviewCount: number;
   createdAt: string;
   updatedAt: string;
 }

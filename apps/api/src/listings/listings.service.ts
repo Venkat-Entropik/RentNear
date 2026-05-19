@@ -285,6 +285,8 @@ export class ListingsService {
     lat: number | null;
     lng: number | null;
     media: Array<{ id: string; url: string; order: number; isPrimary: boolean }>;
+    rating: number;
+    reviewCount: number;
     createdAt: Date;
     updatedAt: Date;
   }): ListingPublic {
@@ -304,6 +306,8 @@ export class ListingsService {
       lat: listing.lat,
       lng: listing.lng,
       media: listing.media.map((m) => this.mapMedia(m)),
+      rating: listing.rating,
+      reviewCount: listing.reviewCount,
       createdAt: listing.createdAt.toISOString(),
       updatedAt: listing.updatedAt.toISOString(),
     };

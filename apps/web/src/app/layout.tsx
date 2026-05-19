@@ -9,6 +9,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { QueryProvider } from '@/providers/QueryProvider';
+import { Header } from '@/components/Header';
 
 export const metadata: Metadata = {
   title: {
@@ -38,8 +39,11 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body className="antialiased">
-        <QueryProvider>{children}</QueryProvider>
+      <body className="antialiased flex min-h-screen flex-col bg-neutral-50">
+        <QueryProvider>
+          <Header />
+          <main className="flex-1">{children}</main>
+        </QueryProvider>
       </body>
     </html>
   );
