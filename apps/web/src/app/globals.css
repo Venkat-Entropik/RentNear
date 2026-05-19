@@ -1,0 +1,158 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import 'leaflet/dist/leaflet.css';
+@import './leaflet-custom.css';
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* ── Base Reset ────────────────────────────────────────────────────────────── */
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    font-family: 'Inter', 'SF Pro', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: #F5F5F5;
+    color: #111111;
+    min-height: 100dvh;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #F5F5F5;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #E5E7EB;
+    border-radius: 3px;
+  }
+}
+
+/* ── Component Utilities ────────────────────────────────────────────────────── */
+@layer components {
+  /* White card surface */
+  .white-card {
+    background: #FFFFFF;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+
+  /* Primary solid button */
+  .btn-primary {
+    @apply relative overflow-hidden rounded-[100px] px-6 py-3.5 font-semibold text-white transition-all duration-200;
+    background: #0E7060;
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background: #0c6355;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(14, 112, 96, 0.2);
+  }
+
+  .btn-primary:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Input field */
+  .input-field {
+    @apply w-full rounded-[12px] px-4 py-3.5 text-neutral-900 placeholder-neutral-400 outline-none transition-all duration-200;
+    background: #F2F4F7;
+    border: 1px solid transparent;
+    font-size: 1rem;
+  }
+
+  .input-field:focus {
+    border-color: #0E7060;
+    background: #FFFFFF;
+    box-shadow: 0 0 0 3px rgba(14, 112, 96, 0.1);
+  }
+
+  .input-field.error {
+    border-color: #EF4444;
+    background: #FEF2F2;
+  }
+
+  /* OTP digit box */
+  .otp-box {
+    @apply flex h-14 w-12 items-center justify-center rounded-[12px] text-xl font-bold text-neutral-900 outline-none transition-all duration-200 sm:h-16 sm:w-14;
+    background: #F2F4F7;
+    border: 1px solid transparent;
+    caret-color: #0E7060;
+  }
+
+  .otp-box:focus {
+    border-color: #0E7060;
+    background: #FFFFFF;
+    box-shadow: 0 0 0 3px rgba(14, 112, 96, 0.1);
+  }
+
+  .otp-box.filled {
+    border-color: #c0e0db;
+    background: #FFFFFF;
+  }
+
+  .otp-box.error {
+    border-color: #EF4444;
+    background: #FEF2F2;
+  }
+
+  /* Error alert */
+  .alert-error {
+    @apply flex items-start gap-2.5 rounded-[12px] px-4 py-3 text-sm;
+    background: #FEF2F2;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #B91C1C;
+  }
+
+  /* Success state */
+  .alert-success {
+    @apply flex items-start gap-2.5 rounded-[12px] px-4 py-3 text-sm;
+    background: #e8f9ed;
+    border: 1px solid rgba(52, 199, 89, 0.2);
+    color: #15803d;
+  }
+}
+
+/* ── Animations ─────────────────────────────────────────────────────────────── */
+@layer utilities {
+  .animate-delay-100 { animation-delay: 100ms; }
+  .animate-delay-200 { animation-delay: 200ms; }
+  .animate-delay-300 { animation-delay: 300ms; }
+
+  /* Gradient text */
+  .text-gradient {
+    background: linear-gradient(135deg, #111111 0%, #666666 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-brand {
+    background: linear-gradient(135deg, #0E7060 0%, #4da89b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}

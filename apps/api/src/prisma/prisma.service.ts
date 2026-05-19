@@ -1,0 +1,37 @@
+// ──────────────────────────────────────────────────────────────────────────────
+// apps/api/src/prisma/prisma.service.ts
+//
+// Singleton Prisma client that integrates with NestJS lifecycle hooks.
+// onModuleInit → connects to DB
+// onModuleDestroy → gracefully disconnects
+// ──────────────────────────────────────────────────────────────────────────────
+
+import { Injectable, OnModuleInit, OnModuleDestroy, Logger } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
+
+@Injectable()
+export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
+  private readonly logger = new Logger(PrismaService.name);
+
+  constructor() {
+    super({
+      log: [
+        { emit: 'event', level: 'query' },
+        { emit: 'stdout', level: 'info' },
+        { emit: 'stdout', level: 'warn' },
+        { emit: 'stdout', level: 'error' },
+      ],
+    });
+  }
+
+  async onModuleInit(): Promise<void> {
+    this.logger.log('Connecting to database...');
+    await this.$connect();
+    this.logger.log('Database connected.');
+  }
+
+  async onModuleDestroy(): Promise<void> {
+    this.logger.log('Disconnecting from database...');
+    await this.$disconnect();
+  }
+}
