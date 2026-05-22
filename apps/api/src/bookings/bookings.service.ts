@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { BookingStatus, type BookingPublic } from '@rentnear/types';
@@ -51,9 +56,10 @@ export class BookingsService {
   async create(renterId: string, listingId: string, dto: CreateBookingDto): Promise<BookingPublic> {
     const start = new Date(dto.startDate);
     const end = new Date(dto.endDate);
-    
+
     // Validations
-    if (start > end) throw new BadRequestException('Start date must be before or equal to end date.');
+    if (start > end)
+      throw new BadRequestException('Start date must be before or equal to end date.');
     if (start < new Date(new Date().setHours(0, 0, 0, 0))) {
       throw new BadRequestException('Start date cannot be in the past.');
     }
@@ -63,7 +69,8 @@ export class BookingsService {
     });
 
     if (!listing) throw new NotFoundException('Listing not found or not published.');
-    if (listing.ownerId === renterId) throw new BadRequestException('You cannot book your own listing.');
+    if (listing.ownerId === renterId)
+      throw new BadRequestException('You cannot book your own listing.');
 
     // Calculate days and total price
     const msPerDay = 1000 * 60 * 60 * 24;
@@ -151,7 +158,7 @@ export class BookingsService {
       orderBy: { createdAt: 'desc' },
     });
 
-    return bookings.map(b => this.formatBooking(b));
+    return bookings.map((b) => this.formatBooking(b));
   }
 
   /**
@@ -176,13 +183,17 @@ export class BookingsService {
       orderBy: { createdAt: 'desc' },
     });
 
-    return bookings.map(b => this.formatBooking(b));
+    return bookings.map((b) => this.formatBooking(b));
   }
 
   /**
    * Update the status of a booking (CONFIRM/REJECT/CANCEL)
    */
-  async updateStatus(userId: string, bookingId: string, status: BookingStatus): Promise<BookingPublic> {
+  async updateStatus(
+    userId: string,
+    bookingId: string,
+    status: BookingStatus,
+  ): Promise<BookingPublic> {
     const booking = await this.prisma.booking.findUnique({
       where: { id: bookingId },
       include: { listing: true },

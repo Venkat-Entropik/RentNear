@@ -103,7 +103,9 @@ export function TripCard({ booking, onCancel, isCancelling }: TripCardProps) {
         <div>
           <div className="flex items-start justify-between">
             <div>
-              <span className={`inline-flex items-center gap-1.5 rounded-pill border px-2.5 py-1 text-xs font-semibold ${statusColors[booking.status]}`}>
+              <span
+                className={`inline-flex items-center gap-1.5 rounded-pill border px-2.5 py-1 text-xs font-semibold ${statusColors[booking.status]}`}
+              >
                 <StatusIcon className="h-3.5 w-3.5" />
                 {booking.status}
               </span>
@@ -123,7 +125,9 @@ export function TripCard({ booking, onCancel, isCancelling }: TripCardProps) {
 
           <div className="mt-4 flex items-center gap-2 rounded-[12px] bg-neutral-50 p-3 text-sm text-neutral-700">
             <Calendar className="h-4 w-4 text-primary-500" />
-            <span className="font-medium">{format(parseISO(booking.startDate), 'MMM d, yyyy')}</span>
+            <span className="font-medium">
+              {format(parseISO(booking.startDate), 'MMM d, yyyy')}
+            </span>
             <span className="text-neutral-400">→</span>
             <span className="font-medium">{format(parseISO(booking.endDate), 'MMM d, yyyy')}</span>
           </div>

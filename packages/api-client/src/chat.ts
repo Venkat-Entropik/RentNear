@@ -23,7 +23,11 @@ export async function getOrCreateConversation(listingId: string): Promise<Conver
  * GET /chat/conversations/:id/messages
  * Fetch paginated messages for a conversation
  */
-export async function getMessages(conversationId: string, page = 1, limit = 50): Promise<MessagesPage> {
+export async function getMessages(
+  conversationId: string,
+  page = 1,
+  limit = 50,
+): Promise<MessagesPage> {
   const res = await apiClient.get<MessagesPage>(`/chat/conversations/${conversationId}/messages`, {
     params: { page, limit },
   });

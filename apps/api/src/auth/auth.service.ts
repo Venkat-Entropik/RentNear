@@ -20,12 +20,7 @@ import * as bcrypt from 'bcryptjs';
 import { PrismaService } from '../prisma/prisma.service';
 import { SendOtpDto } from './dto/send-otp.dto';
 import { VerifyOtpDto } from './dto/verify-otp.dto';
-import type {
-  SendOtpResponse,
-  AuthTokenResponse,
-  JwtPayload,
-  UserPublic,
-} from '@rentnear/types';
+import type { SendOtpResponse, AuthTokenResponse, JwtPayload, UserPublic } from '@rentnear/types';
 import { Role, KycStatus } from '@rentnear/types';
 
 // Number of bcrypt rounds for OTP hashing (lower than password hashing
@@ -216,9 +211,7 @@ export class AuthService {
     const tokenHash = createHash('sha256').update(rawRefreshToken).digest('hex');
 
     const refreshExpiresIn = this.config.get<string>('JWT_REFRESH_EXPIRES_IN', '7d');
-    const refreshExpiresAt = new Date(
-      Date.now() + this.parseDurationMs(refreshExpiresIn),
-    );
+    const refreshExpiresAt = new Date(Date.now() + this.parseDurationMs(refreshExpiresIn));
 
     await this.prisma.refreshToken.create({
       data: {

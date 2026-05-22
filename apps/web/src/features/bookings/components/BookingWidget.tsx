@@ -14,7 +14,7 @@ interface BookingWidgetProps {
 export function BookingWidget({ listingId, pricePerDay, deposit }: BookingWidgetProps) {
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
-  
+
   const { mutate: requestBooking, isPending, error, isSuccess } = useCreateBooking();
 
   const handleBooking = () => {
@@ -65,7 +65,9 @@ export function BookingWidget({ listingId, pricePerDay, deposit }: BookingWidget
       <div className="mb-4 rounded-[12px] border border-neutral-200 overflow-hidden">
         <div className="flex border-b border-neutral-200">
           <div className="flex-1 border-r border-neutral-200 p-3">
-            <label className="block text-[10px] font-bold uppercase text-neutral-900">Check-in</label>
+            <label className="block text-[10px] font-bold uppercase text-neutral-900">
+              Check-in
+            </label>
             <input
               type="date"
               className="mt-1 w-full bg-transparent text-sm focus:outline-none"
@@ -75,7 +77,9 @@ export function BookingWidget({ listingId, pricePerDay, deposit }: BookingWidget
             />
           </div>
           <div className="flex-1 p-3">
-            <label className="block text-[10px] font-bold uppercase text-neutral-900">Check-out</label>
+            <label className="block text-[10px] font-bold uppercase text-neutral-900">
+              Check-out
+            </label>
             <input
               type="date"
               className="mt-1 w-full bg-transparent text-sm focus:outline-none"
@@ -90,7 +94,9 @@ export function BookingWidget({ listingId, pricePerDay, deposit }: BookingWidget
       {days > 0 && (
         <div className="mb-4 space-y-2 text-sm text-neutral-600">
           <div className="flex justify-between">
-            <span>₹{pricePerDay.toLocaleString('en-IN')} x {days} days</span>
+            <span>
+              ₹{pricePerDay.toLocaleString('en-IN')} x {days} days
+            </span>
             <span>₹{rentalCost.toLocaleString('en-IN')}</span>
           </div>
           {deposit && (
@@ -120,9 +126,7 @@ export function BookingWidget({ listingId, pricePerDay, deposit }: BookingWidget
       >
         {isPending ? <Loader2 className="mx-auto h-5 w-5 animate-spin" /> : 'Request to Book'}
       </button>
-      <p className="mt-3 text-center text-xs text-neutral-500">
-        You won&apos;t be charged yet
-      </p>
+      <p className="mt-3 text-center text-xs text-neutral-500">You won&apos;t be charged yet</p>
     </div>
   );
 }

@@ -18,7 +18,11 @@ export function PublishStep({ listing, onBack, onPublished }: PublishStepProps) 
 
   return (
     <div className="space-y-5">
-      <button type="button" onClick={onBack} className="flex items-center gap-1.5 text-sm text-neutral-500 hover:text-neutral-900">
+      <button
+        type="button"
+        onClick={onBack}
+        className="flex items-center gap-1.5 text-sm text-neutral-500 hover:text-neutral-900"
+      >
         <ArrowLeft className="h-4 w-4" /> Back
       </button>
 

@@ -28,7 +28,9 @@ export function ListingsFeedView() {
       <div className="mb-6">
         <h1 className="text-hero text-neutral-900">Browse Rentals</h1>
         <p className="mt-1 text-body text-neutral-600">
-          {data ? `${data.total} item${data.total !== 1 ? 's' : ''} available near you` : 'Find anything to rent from your neighbours'}
+          {data
+            ? `${data.total} item${data.total !== 1 ? 's' : ''} available near you`
+            : 'Find anything to rent from your neighbours'}
         </p>
       </div>
 
@@ -45,10 +47,7 @@ export function ListingsFeedView() {
                 <Loader2 className="h-6 w-6 animate-spin text-primary-500" />
               </div>
             ) : (
-              <ListingGrid
-                listings={data?.data ?? []}
-                emptyMessage="No listings found on map."
-              />
+              <ListingGrid listings={data?.data ?? []} emptyMessage="No listings found on map." />
             )}
           </div>
           <div className="w-2/3 h-full relative z-0">
@@ -58,53 +57,53 @@ export function ListingsFeedView() {
       ) : (
         <>
           {/* Loading state */}
-      {isLoading ? (
-        <div className="flex items-center justify-center py-20">
-          <Loader2 className="h-6 w-6 animate-spin text-primary-500" />
-        </div>
-      ) : (
-        <>
-          {/* Subtle fetching indicator */}
-          {isFetching && !isLoading && (
-            <div className="mb-4 flex items-center gap-2 text-xs text-neutral-400">
-              <Loader2 className="h-3 w-3 animate-spin" /> Updating…
+          {isLoading ? (
+            <div className="flex items-center justify-center py-20">
+              <Loader2 className="h-6 w-6 animate-spin text-primary-500" />
             </div>
-          )}
+          ) : (
+            <>
+              {/* Subtle fetching indicator */}
+              {isFetching && !isLoading && (
+                <div className="mb-4 flex items-center gap-2 text-xs text-neutral-400">
+                  <Loader2 className="h-3 w-3 animate-spin" /> Updating…
+                </div>
+              )}
 
-          <ListingGrid
-            listings={data?.data ?? []}
-            emptyMessage={
-              query.city || query.categoryId
-                ? 'No listings match your filters. Try broadening your search.'
-                : 'No listings yet. Be the first to list something!'
-            }
-          />
+              <ListingGrid
+                listings={data?.data ?? []}
+                emptyMessage={
+                  query.city || query.categoryId
+                    ? 'No listings match your filters. Try broadening your search.'
+                    : 'No listings yet. Be the first to list something!'
+                }
+              />
 
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="mt-8 flex items-center justify-center gap-3">
-              <button
-                disabled={currentPage <= 1}
-                onClick={() => setQuery((q) => ({ ...q, page: (q.page ?? 1) - 1 }))}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 text-neutral-600 transition-colors hover:bg-neutral-50 disabled:opacity-40"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </button>
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="mt-8 flex items-center justify-center gap-3">
+                  <button
+                    disabled={currentPage <= 1}
+                    onClick={() => setQuery((q) => ({ ...q, page: (q.page ?? 1) - 1 }))}
+                    className="flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 text-neutral-600 transition-colors hover:bg-neutral-50 disabled:opacity-40"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
 
-              <span className="text-sm text-neutral-600">
-                Page {currentPage} of {totalPages}
-              </span>
+                  <span className="text-sm text-neutral-600">
+                    Page {currentPage} of {totalPages}
+                  </span>
 
-              <button
-                disabled={currentPage >= totalPages}
-                onClick={() => setQuery((q) => ({ ...q, page: (q.page ?? 1) + 1 }))}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 text-neutral-600 transition-colors hover:bg-neutral-50 disabled:opacity-40"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
-          )}
-        </>
+                  <button
+                    disabled={currentPage >= totalPages}
+                    onClick={() => setQuery((q) => ({ ...q, page: (q.page ?? 1) + 1 }))}
+                    className="flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 text-neutral-600 transition-colors hover:bg-neutral-50 disabled:opacity-40"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </>
       )}
@@ -116,9 +115,13 @@ export function ListingsFeedView() {
           className="flex items-center gap-2 bg-neutral-900 text-white px-5 py-3 rounded-pill shadow-xl font-medium text-sm hover:bg-neutral-800 transition-transform active:scale-95"
         >
           {viewMode === 'list' ? (
-            <><Map className="h-4 w-4" /> Show Map</>
+            <>
+              <Map className="h-4 w-4" /> Show Map
+            </>
           ) : (
-            <><List className="h-4 w-4" /> Show List</>
+            <>
+              <List className="h-4 w-4" /> Show List
+            </>
           )}
         </button>
       </div>

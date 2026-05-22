@@ -17,7 +17,7 @@ interface ReviewModalProps {
 export function ReviewModal({ booking, isOpen, onClose }: ReviewModalProps) {
   const [rating, setRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
-  
+
   const { mutateAsync: createReview, isPending } = useCreateReview();
 
   const {
@@ -52,14 +52,18 @@ export function ReviewModal({ booking, isOpen, onClose }: ReviewModalProps) {
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         <div className="flex items-center justify-between border-b border-neutral-100 p-6">
           <h2 className="text-xl font-semibold text-neutral-900">Write a Review</h2>
-          <button onClick={onClose} className="p-2 hover:bg-neutral-100 rounded-full transition-colors text-neutral-500">
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-neutral-100 rounded-full transition-colors text-neutral-500"
+          >
             <X className="h-5 w-5" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="p-6">
           <p className="text-sm text-neutral-600 mb-6">
-            How was your experience renting <strong>{booking.listing?.title}</strong>? Your feedback helps the community.
+            How was your experience renting <strong>{booking.listing?.title}</strong>? Your feedback
+            helps the community.
           </p>
 
           <div className="mb-6">

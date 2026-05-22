@@ -74,7 +74,11 @@ export function ListingFilters({ value, onChange }: ListingFiltersProps) {
             value={value.minPrice ?? ''}
             onChange={(e) => {
               const q: ListingsQuery = { ...value, page: 1 };
-              if (e.target.value) { q.minPrice = parseInt(e.target.value); } else { delete q.minPrice; }
+              if (e.target.value) {
+                q.minPrice = parseInt(e.target.value);
+              } else {
+                delete q.minPrice;
+              }
               onChange(q);
             }}
             className="input-field w-28 text-sm"
@@ -87,7 +91,11 @@ export function ListingFilters({ value, onChange }: ListingFiltersProps) {
             value={value.maxPrice ?? ''}
             onChange={(e) => {
               const q: ListingsQuery = { ...value, page: 1 };
-              if (e.target.value) { q.maxPrice = parseInt(e.target.value); } else { delete q.maxPrice; }
+              if (e.target.value) {
+                q.maxPrice = parseInt(e.target.value);
+              } else {
+                delete q.maxPrice;
+              }
               onChange(q);
             }}
             className="input-field w-28 text-sm"
@@ -119,7 +127,11 @@ export function ListingFilters({ value, onChange }: ListingFiltersProps) {
             key={cat.id}
             onClick={() => {
               const q: ListingsQuery = { ...value, page: 1 };
-              if (value.categoryId === cat.id) { delete q.categoryId; } else { q.categoryId = cat.id; }
+              if (value.categoryId === cat.id) {
+                delete q.categoryId;
+              } else {
+                q.categoryId = cat.id;
+              }
               onChange(q);
             }}
             className={`flex items-center gap-1 rounded-pill border px-3 py-1.5 text-sm font-medium transition-colors ${

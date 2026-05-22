@@ -23,7 +23,9 @@ export default function MyListingsPage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-hero text-neutral-900">My Listings</h1>
-          <p className="mt-1 text-sm text-neutral-600">{listings.length} listing{listings.length !== 1 ? 's' : ''}</p>
+          <p className="mt-1 text-sm text-neutral-600">
+            {listings.length} listing{listings.length !== 1 ? 's' : ''}
+          </p>
         </div>
         <Link
           href="/listings/new"
@@ -39,7 +41,10 @@ export default function MyListingsPage() {
         <div className="white-card flex flex-col items-center gap-3 py-16 text-center">
           <PackageOpen className="h-10 w-10 text-neutral-300" />
           <p className="text-sm text-neutral-600">You haven&apos;t listed anything yet.</p>
-          <Link href="/listings/new" className="text-sm font-medium text-primary-500 hover:text-primary-600">
+          <Link
+            href="/listings/new"
+            className="text-sm font-medium text-primary-500 hover:text-primary-600"
+          >
             Create your first listing →
           </Link>
         </div>
@@ -66,12 +71,16 @@ export default function MyListingsPage() {
               {/* Info */}
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-semibold text-neutral-900">{listing.title}</p>
-                <p className="text-xs text-neutral-500">₹{listing.pricePerDay.toLocaleString('en-IN')}/day · {listing.city}</p>
-                <span className={`mt-1 inline-block rounded-pill px-2 py-0.5 text-xs font-medium ${
-                  listing.isPublished
-                    ? 'bg-success-light text-success'
-                    : 'bg-amber-50 text-amber-700'
-                }`}>
+                <p className="text-xs text-neutral-500">
+                  ₹{listing.pricePerDay.toLocaleString('en-IN')}/day · {listing.city}
+                </p>
+                <span
+                  className={`mt-1 inline-block rounded-pill px-2 py-0.5 text-xs font-medium ${
+                    listing.isPublished
+                      ? 'bg-success-light text-success'
+                      : 'bg-amber-50 text-amber-700'
+                  }`}
+                >
                   {listing.isPublished ? 'Published' : 'Draft'}
                 </span>
               </div>
@@ -91,10 +100,11 @@ export default function MyListingsPage() {
                   className="flex h-8 w-8 items-center justify-center rounded-full text-neutral-400 transition-colors hover:bg-red-50 hover:text-danger disabled:opacity-50"
                   aria-label="Delete"
                 >
-                  {isDeleting && deletingId === listing.id
-                    ? <Loader2 className="h-4 w-4 animate-spin" />
-                    : <Trash2 className="h-4 w-4" />
-                  }
+                  {isDeleting && deletingId === listing.id ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Trash2 className="h-4 w-4" />
+                  )}
                 </button>
               </div>
             </div>

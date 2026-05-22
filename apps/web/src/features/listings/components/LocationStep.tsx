@@ -35,13 +35,19 @@ export function LocationStep({ defaultValues, onNext, onBack }: LocationStepProp
 
   return (
     <form onSubmit={handleSubmit(onNext)} className="space-y-5">
-      <button type="button" onClick={onBack} className="flex items-center gap-1.5 text-sm text-neutral-500 hover:text-neutral-900">
+      <button
+        type="button"
+        onClick={onBack}
+        className="flex items-center gap-1.5 text-sm text-neutral-500 hover:text-neutral-900"
+      >
         <ArrowLeft className="h-4 w-4" /> Back
       </button>
 
       <div>
         <h2 className="text-h2 text-neutral-900">Where is the item located?</h2>
-        <p className="mt-1 text-sm text-neutral-600">Renters nearby will discover your listing first.</p>
+        <p className="mt-1 text-sm text-neutral-600">
+          Renters nearby will discover your listing first.
+        </p>
       </div>
 
       <Field label="City" error={errors.city?.message}>
@@ -53,7 +59,13 @@ export function LocationStep({ defaultValues, onNext, onBack }: LocationStepProp
       </Field>
 
       <Field label="Pincode" error={errors.pincode?.message}>
-        <input {...register('pincode')} inputMode="numeric" maxLength={6} className="input-field" placeholder="600001" />
+        <input
+          {...register('pincode')}
+          inputMode="numeric"
+          maxLength={6}
+          className="input-field"
+          placeholder="600001"
+        />
       </Field>
 
       <button type="submit" className="btn-primary flex w-full items-center justify-center gap-2">
@@ -64,7 +76,15 @@ export function LocationStep({ defaultValues, onNext, onBack }: LocationStepProp
   );
 }
 
-function Field({ label, error, children }: { label: string; error?: string | undefined; children: React.ReactNode }) {
+function Field({
+  label,
+  error,
+  children,
+}: {
+  label: string;
+  error?: string | undefined;
+  children: React.ReactNode;
+}) {
   return (
     <div className="space-y-1.5">
       <label className="block text-sm font-medium text-neutral-800">{label}</label>

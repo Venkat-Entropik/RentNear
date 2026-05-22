@@ -28,7 +28,11 @@ export class ReviewsService {
     return formatted;
   }
 
-  async createReview(userId: string, listingId: string, dto: CreateReviewDto): Promise<ReviewPublic> {
+  async createReview(
+    userId: string,
+    listingId: string,
+    dto: CreateReviewDto,
+  ): Promise<ReviewPublic> {
     // 1. Verify user has a COMPLETED booking for this listing
     const completedBooking = await this.prisma.booking.findFirst({
       where: {
@@ -39,7 +43,9 @@ export class ReviewsService {
     });
 
     if (!completedBooking) {
-      throw new BadRequestException('You can only review listings you have successfully rented and completed.');
+      throw new BadRequestException(
+        'You can only review listings you have successfully rented and completed.',
+      );
     }
 
     // 2. Ensure they haven't already reviewed it
@@ -106,7 +112,7 @@ export class ReviewsService {
     ]);
 
     return {
-      data: reviews.map(r => this.formatReview(r)),
+      data: reviews.map((r) => this.formatReview(r)),
       total,
       page,
       limit,

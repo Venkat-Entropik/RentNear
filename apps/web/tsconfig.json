@@ -2,11 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "target": "ES2017",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "ES2022"
-    ],
+    "lib": ["dom", "dom.iterable", "ES2022"],
     "module": "ESNext",
     "moduleResolution": "bundler",
     "jsx": "preserve",
@@ -18,26 +14,13 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@rentnear/types": [
-        "../../packages/types/src/index.ts"
-      ],
-      "@rentnear/api-client": [
-        "../../packages/api-client/src/index.ts"
-      ]
+      "@/*": ["./src/*"],
+      "@rentnear/types": ["../../packages/types/src/index.ts"],
+      "@rentnear/api-client": ["../../packages/api-client/src/index.ts"]
     },
     "noEmit": true,
     "isolatedModules": true
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
 }

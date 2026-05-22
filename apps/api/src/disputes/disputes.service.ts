@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ForbiddenException,
+  BadRequestException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateDisputeDto } from './dto/create-dispute.dto';
 import type { DisputePublic } from '@rentnear/types';
@@ -17,22 +22,28 @@ export class DisputesService {
       adminNotes: dispute.adminNotes,
       createdAt: dispute.createdAt.toISOString(),
       updatedAt: dispute.updatedAt.toISOString(),
-      booking: dispute.booking ? {
-        id: dispute.booking.id,
-        status: dispute.booking.status as string,
-        ...(dispute.booking.listing ? {
-          listing: {
-            id: dispute.booking.listing.id,
-            title: dispute.booking.listing.title,
-            media: dispute.booking.listing.media || [],
+      booking: dispute.booking
+        ? {
+            id: dispute.booking.id,
+            status: dispute.booking.status as string,
+            ...(dispute.booking.listing
+              ? {
+                  listing: {
+                    id: dispute.booking.listing.id,
+                    title: dispute.booking.listing.title,
+                    media: dispute.booking.listing.media || [],
+                  },
+                }
+              : {}),
           }
-        } : {}),
-      } : undefined,
-      initiator: dispute.initiator ? {
-        id: dispute.initiator.id,
-        name: dispute.initiator.name,
-        email: dispute.initiator.email,
-      } : undefined,
+        : undefined,
+      initiator: dispute.initiator
+        ? {
+            id: dispute.initiator.id,
+            name: dispute.initiator.name,
+            email: dispute.initiator.email,
+          }
+        : undefined,
     } as DisputePublic;
   }
 
@@ -95,6 +106,6 @@ export class DisputesService {
       orderBy: { createdAt: 'desc' },
     });
 
-    return disputes.map(d => this.formatDispute(d));
+    return disputes.map((d) => this.formatDispute(d));
   }
 }

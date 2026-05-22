@@ -8,11 +8,7 @@
 
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import {
-  S3Client,
-  PutObjectCommand,
-  DeleteObjectCommand,
-} from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { randomBytes } from 'crypto';
 import type { PresignedUrlResponse } from '@rentnear/types';
@@ -70,9 +66,7 @@ export class R2Service {
    */
   async deleteObject(r2Key: string): Promise<void> {
     try {
-      await this.s3.send(
-        new DeleteObjectCommand({ Bucket: this.bucket, Key: r2Key }),
-      );
+      await this.s3.send(new DeleteObjectCommand({ Bucket: this.bucket, Key: r2Key }));
       this.logger.debug(`Deleted R2 object: ${r2Key}`);
     } catch (err) {
       // Log but don't throw — DB record should still be cleaned up

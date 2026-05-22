@@ -54,9 +54,7 @@ export function MediaUploader({ listingId, existingMedia }: MediaUploaderProps) 
           isPrimary: existingMedia.length === 0 && i === 0,
           onProgress: (pct) => {
             setUploadQueue((prev) =>
-              prev.map((q) =>
-                q.previewUrl === item.previewUrl ? { ...q, progress: pct } : q,
-              ),
+              prev.map((q) => (q.previewUrl === item.previewUrl ? { ...q, progress: pct } : q)),
             );
           },
         });
@@ -68,9 +66,7 @@ export function MediaUploader({ listingId, existingMedia }: MediaUploaderProps) 
         );
       } catch {
         setUploadQueue((prev) =>
-          prev.map((q) =>
-            q.previewUrl === item.previewUrl ? { ...q, status: 'error' } : q,
-          ),
+          prev.map((q) => (q.previewUrl === item.previewUrl ? { ...q, status: 'error' } : q)),
         );
       }
     }
@@ -112,7 +108,10 @@ export function MediaUploader({ listingId, existingMedia }: MediaUploaderProps) 
           {uploadQueue
             .filter((q) => q.status !== 'done')
             .map((item) => (
-              <div key={item.previewUrl} className="flex items-center gap-3 rounded-[12px] bg-neutral-50 p-3">
+              <div
+                key={item.previewUrl}
+                className="flex items-center gap-3 rounded-[12px] bg-neutral-50 p-3"
+              >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={item.previewUrl}

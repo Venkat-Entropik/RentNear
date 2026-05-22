@@ -101,10 +101,7 @@ export class ChatService {
   async getUserConversations(userId: string): Promise<ConversationPublic[]> {
     const conversations = await this.prisma.conversation.findMany({
       where: {
-        OR: [
-          { renterId: userId },
-          { ownerId: userId },
-        ],
+        OR: [{ renterId: userId }, { ownerId: userId }],
       },
       include: {
         listing: { include: { media: { take: 1, orderBy: { order: 'asc' } } } },
@@ -118,13 +115,18 @@ export class ChatService {
       orderBy: { updatedAt: 'desc' },
     });
 
-    return conversations.map(c => this.formatConversation(c));
+    return conversations.map((c) => this.formatConversation(c));
   }
 
   /**
    * Fetch messages for a specific conversation
    */
-  async getMessages(userId: string, conversationId: string, page = 1, limit = 50): Promise<MessagesPage> {
+  async getMessages(
+    userId: string,
+    conversationId: string,
+    page = 1,
+    limit = 50,
+  ): Promise<MessagesPage> {
     const conversation = await this.prisma.conversation.findUnique({
       where: { id: conversationId },
     });
@@ -168,7 +170,11 @@ export class ChatService {
   /**
    * Create a new message
    */
-  async createMessage(senderId: string, conversationId: string, content: string): Promise<MessagePublic> {
+  async createMessage(
+    senderId: string,
+    conversationId: string,
+    content: string,
+  ): Promise<MessagePublic> {
     const conversation = await this.prisma.conversation.findUnique({
       where: { id: conversationId },
     });

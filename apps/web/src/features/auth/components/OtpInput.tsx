@@ -174,7 +174,9 @@ export function OtpInput({
         {digits.map((digit, i) => (
           <input
             key={i}
-            ref={(el) => { inputRefs.current[i] = el; }}
+            ref={(el) => {
+              inputRefs.current[i] = el;
+            }}
             id={`otp-digit-${i}`}
             type="text"
             inputMode="numeric"

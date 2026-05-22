@@ -23,7 +23,14 @@ import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { CreateListingDto } from './dto/create-listing.dto';
 import { UpdateListingDto } from './dto/update-listing.dto';
 import { ConfirmMediaDto } from './dto/confirm-media.dto';
-import type { JwtPayload, ListingPublic, ListingCategoryPublic, ListingsPage, ListingsQuery, PresignedUrlResponse } from '@rentnear/types';
+import type {
+  JwtPayload,
+  ListingPublic,
+  ListingCategoryPublic,
+  ListingsPage,
+  ListingsQuery,
+  PresignedUrlResponse,
+} from '@rentnear/types';
 
 @Controller('listings')
 export class ListingsController {
@@ -95,10 +102,7 @@ export class ListingsController {
   /** POST /listings/:id/publish */
   @Post(':id/publish')
   @UseGuards(JwtAuthGuard)
-  async publish(
-    @CurrentUser() user: JwtPayload,
-    @Param('id') id: string,
-  ): Promise<ListingPublic> {
+  async publish(@CurrentUser() user: JwtPayload, @Param('id') id: string): Promise<ListingPublic> {
     return this.listingsService.publish(user.sub, id);
   }
 
@@ -106,10 +110,7 @@ export class ListingsController {
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(
-    @CurrentUser() user: JwtPayload,
-    @Param('id') id: string,
-  ): Promise<void> {
+  async remove(@CurrentUser() user: JwtPayload, @Param('id') id: string): Promise<void> {
     return this.listingsService.remove(user.sub, id);
   }
 

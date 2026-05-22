@@ -112,10 +112,18 @@ export function AddressForm({ onSuccess, onCancel }: AddressFormProps) {
 
       {/* Actions */}
       <div className="flex gap-3 pt-2">
-        <button type="button" onClick={onCancel} className="flex-1 rounded-pill border border-neutral-200 py-3 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50">
+        <button
+          type="button"
+          onClick={onCancel}
+          className="flex-1 rounded-pill border border-neutral-200 py-3 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
+        >
           Cancel
         </button>
-        <button type="submit" disabled={isPending} className="btn-primary flex flex-1 items-center justify-center gap-2">
+        <button
+          type="submit"
+          disabled={isPending}
+          className="btn-primary flex flex-1 items-center justify-center gap-2"
+        >
           {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
           Save Address
         </button>

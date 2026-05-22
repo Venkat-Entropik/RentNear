@@ -37,7 +37,9 @@ export function CreateListingForm({ defaultValues, onNext }: CreateListingFormPr
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       <div>
         <h2 className="text-h2 text-neutral-900">What are you renting out?</h2>
-        <p className="mt-1 text-sm text-neutral-600">Add details so renters know exactly what to expect.</p>
+        <p className="mt-1 text-sm text-neutral-600">
+          Add details so renters know exactly what to expect.
+        </p>
       </div>
 
       {/* Category */}
@@ -77,7 +79,11 @@ export function CreateListingForm({ defaultValues, onNext }: CreateListingFormPr
 
       {/* Title */}
       <Field label="Title" error={errors.title?.message}>
-        <input {...register('title')} className="input-field" placeholder="Nikon D750 DSLR Camera" />
+        <input
+          {...register('title')}
+          className="input-field"
+          placeholder="Nikon D750 DSLR Camera"
+        />
       </Field>
 
       {/* Description */}
@@ -122,7 +128,15 @@ export function CreateListingForm({ defaultValues, onNext }: CreateListingFormPr
   );
 }
 
-function Field({ label, error, children }: { label: string; error?: string | undefined; children: React.ReactNode }) {
+function Field({
+  label,
+  error,
+  children,
+}: {
+  label: string;
+  error?: string | undefined;
+  children: React.ReactNode;
+}) {
   return (
     <div className="space-y-1.5">
       <label className="block text-sm font-medium text-neutral-800">{label}</label>

@@ -1,5 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { createDispute, getUserDisputes, getAdminDisputes, updateDisputeStatus } from '@rentnear/api-client';
+import {
+  createDispute,
+  getUserDisputes,
+  getAdminDisputes,
+  updateDisputeStatus,
+} from '@rentnear/api-client';
 
 export const disputeKeys = {
   all: ['disputes'] as const,

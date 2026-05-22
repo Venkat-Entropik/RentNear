@@ -7,7 +7,11 @@ import { BookingStatus } from '@rentnear/types';
 
 export default function HostRequestsPage() {
   const { data: requests, isLoading } = useOwnerRequests();
-  const { mutate: updateStatus, isPending: isUpdating, variables: updatingVars } = useUpdateBookingStatus();
+  const {
+    mutate: updateStatus,
+    isPending: isUpdating,
+    variables: updatingVars,
+  } = useUpdateBookingStatus();
 
   if (isLoading) {
     return (
@@ -25,7 +29,9 @@ export default function HostRequestsPage() {
     <div className="mx-auto max-w-4xl px-4 py-6 sm:px-6">
       <div className="mb-6">
         <h1 className="text-hero text-neutral-900">Booking Requests</h1>
-        <p className="mt-1 text-sm text-neutral-600">Review and manage rental requests for your listings.</p>
+        <p className="mt-1 text-sm text-neutral-600">
+          Review and manage rental requests for your listings.
+        </p>
       </div>
 
       {!requests || requests.length === 0 ? (
@@ -37,15 +43,24 @@ export default function HostRequestsPage() {
         <div className="space-y-8">
           {pendingRequests.length > 0 && (
             <section>
-              <h2 className="mb-3 text-h3 text-neutral-900">Action Required ({pendingRequests.length})</h2>
+              <h2 className="mb-3 text-h3 text-neutral-900">
+                Action Required ({pendingRequests.length})
+              </h2>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {pendingRequests.map((req) => (
                   <RequestCard
                     key={req.id}
                     booking={req}
                     isUpdating={isUpdating && updatingVars?.bookingId === req.id}
-                    onApprove={() => updateStatus({ bookingId: req.id, input: { status: BookingStatus.CONFIRMED } })}
-                    onReject={() => updateStatus({ bookingId: req.id, input: { status: BookingStatus.REJECTED } })}
+                    onApprove={() =>
+                      updateStatus({
+                        bookingId: req.id,
+                        input: { status: BookingStatus.CONFIRMED },
+                      })
+                    }
+                    onReject={() =>
+                      updateStatus({ bookingId: req.id, input: { status: BookingStatus.REJECTED } })
+                    }
                   />
                 ))}
               </div>
@@ -57,10 +72,7 @@ export default function HostRequestsPage() {
               <h2 className="mb-3 text-h3 text-neutral-900">Past & Resolved</h2>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {resolvedRequests.map((req) => (
-                  <RequestCard
-                    key={req.id}
-                    booking={req}
-                  />
+                  <RequestCard key={req.id} booking={req} />
                 ))}
               </div>
             </section>

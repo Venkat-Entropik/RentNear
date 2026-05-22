@@ -87,9 +87,7 @@ export class UsersController {
 
   /** GET /users/me/kyc — get current KYC status */
   @Get('me/kyc')
-  async getKycStatus(
-    @CurrentUser() user: JwtPayload,
-  ): Promise<KycDocumentPublic | null> {
+  async getKycStatus(@CurrentUser() user: JwtPayload): Promise<KycDocumentPublic | null> {
     return this.usersService.getKycStatus(user.sub);
   }
 }

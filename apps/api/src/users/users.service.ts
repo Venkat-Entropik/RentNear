@@ -12,11 +12,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { CreateAddressDto } from './dto/create-address.dto';
 import { SubmitKycDto } from './dto/submit-kyc.dto';
-import type {
-  UserProfile,
-  AddressPublic,
-  KycDocumentPublic,
-} from '@rentnear/types';
+import type { UserProfile, AddressPublic, KycDocumentPublic } from '@rentnear/types';
 import { KycStatus } from '@rentnear/types';
 
 @Injectable()

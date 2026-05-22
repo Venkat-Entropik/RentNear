@@ -5,7 +5,10 @@ import type { CreateReviewInput, ReviewPublic, ReviewsPage } from '@rentnear/typ
  * POST /listings/:id/reviews
  * Submit a review for a completed booking on a listing.
  */
-export async function createReview(listingId: string, input: CreateReviewInput): Promise<ReviewPublic> {
+export async function createReview(
+  listingId: string,
+  input: CreateReviewInput,
+): Promise<ReviewPublic> {
   const res = await apiClient.post<ReviewPublic>(`/listings/${listingId}/reviews`, input);
   return res.data;
 }
@@ -14,7 +17,11 @@ export async function createReview(listingId: string, input: CreateReviewInput):
  * GET /listings/:id/reviews
  * Fetch paginated reviews for a listing.
  */
-export async function getListingReviews(listingId: string, page = 1, limit = 10): Promise<ReviewsPage> {
+export async function getListingReviews(
+  listingId: string,
+  page = 1,
+  limit = 10,
+): Promise<ReviewsPage> {
   const res = await apiClient.get<ReviewsPage>(`/listings/${listingId}/reviews`, {
     params: { page, limit },
   });

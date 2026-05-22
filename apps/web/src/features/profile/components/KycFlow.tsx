@@ -144,9 +144,10 @@ export function KycFlow() {
               className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold transition-colors ${
                 s === step
                   ? 'bg-primary-500 text-white'
-                  : ['enter-details', 'review'].includes(step) && i < ['select-doc', 'enter-details', 'review'].indexOf(step)
-                  ? 'bg-success text-white'
-                  : 'bg-neutral-100 text-neutral-500'
+                  : ['enter-details', 'review'].includes(step) &&
+                      i < ['select-doc', 'enter-details', 'review'].indexOf(step)
+                    ? 'bg-success text-white'
+                    : 'bg-neutral-100 text-neutral-500'
               }`}
             >
               {i + 1}
@@ -165,7 +166,9 @@ export function KycFlow() {
           <div className="animate-fade-in space-y-4">
             <div>
               <h3 className="text-base font-semibold text-neutral-900">Choose ID Type</h3>
-              <p className="mt-1 text-sm text-neutral-600">Select a government-issued document to verify your identity.</p>
+              <p className="mt-1 text-sm text-neutral-600">
+                Select a government-issued document to verify your identity.
+              </p>
             </div>
 
             {/* Rejection note */}
@@ -221,8 +224,12 @@ export function KycFlow() {
             </button>
 
             <div>
-              <h3 className="text-base font-semibold text-neutral-900">{selectedDoc.label} Details</h3>
-              <p className="mt-1 text-sm text-neutral-600">Enter your document information accurately.</p>
+              <h3 className="text-base font-semibold text-neutral-900">
+                {selectedDoc.label} Details
+              </h3>
+              <p className="mt-1 text-sm text-neutral-600">
+                Enter your document information accurately.
+              </p>
             </div>
 
             <input type="hidden" {...register('docType')} />
@@ -236,28 +243,45 @@ export function KycFlow() {
                   selectedDoc.type === DocType.AADHAAR
                     ? '1234 5678 9012'
                     : selectedDoc.type === DocType.PAN
-                    ? 'ABCDE1234F'
-                    : 'Enter number'
+                      ? 'ABCDE1234F'
+                      : 'Enter number'
                 }
               />
             </KycField>
 
             {/* Front image URL */}
             <KycField label="Front Image URL" error={errors.frontUrl?.message}>
-              <input {...register('frontUrl')} type="url" className="input-field" placeholder="https://..." />
-              <p className="text-xs text-neutral-500">Paste a publicly accessible URL of the front image.</p>
+              <input
+                {...register('frontUrl')}
+                type="url"
+                className="input-field"
+                placeholder="https://..."
+              />
+              <p className="text-xs text-neutral-500">
+                Paste a publicly accessible URL of the front image.
+              </p>
             </KycField>
 
             {/* Back image URL (conditional) */}
             {selectedDoc.requiresBack && (
               <KycField label="Back Image URL (optional)" error={errors.backUrl?.message}>
-                <input {...register('backUrl')} type="url" className="input-field" placeholder="https://..." />
+                <input
+                  {...register('backUrl')}
+                  type="url"
+                  className="input-field"
+                  placeholder="https://..."
+                />
               </KycField>
             )}
 
             {/* Selfie URL */}
             <KycField label="Selfie URL (optional)" error={errors.selfieUrl?.message}>
-              <input {...register('selfieUrl')} type="url" className="input-field" placeholder="https://..." />
+              <input
+                {...register('selfieUrl')}
+                type="url"
+                className="input-field"
+                placeholder="https://..."
+              />
             </KycField>
 
             <button
@@ -285,7 +309,9 @@ export function KycFlow() {
 
             <div>
               <h3 className="text-base font-semibold text-neutral-900">Review Submission</h3>
-              <p className="mt-1 text-sm text-neutral-600">Please confirm your details before submitting.</p>
+              <p className="mt-1 text-sm text-neutral-600">
+                Please confirm your details before submitting.
+              </p>
             </div>
 
             <div className="rounded-[12px] bg-neutral-50 p-4 text-sm space-y-2">
@@ -293,9 +319,15 @@ export function KycFlow() {
               <ReviewRow label="Document Number" value={watch('docNumber') ?? '—'} />
               <ReviewRow label="Front Image" value={watch('frontUrl') ? '✓ Provided' : '—'} />
               {selectedDoc?.requiresBack && (
-                <ReviewRow label="Back Image" value={watch('backUrl') ? '✓ Provided' : 'Not provided'} />
+                <ReviewRow
+                  label="Back Image"
+                  value={watch('backUrl') ? '✓ Provided' : 'Not provided'}
+                />
               )}
-              <ReviewRow label="Selfie" value={watch('selfieUrl') ? '✓ Provided' : 'Not provided'} />
+              <ReviewRow
+                label="Selfie"
+                value={watch('selfieUrl') ? '✓ Provided' : 'Not provided'}
+              />
             </div>
 
             {/* Privacy note */}
@@ -316,7 +348,11 @@ export function KycFlow() {
               disabled={isPending}
               className="btn-primary flex w-full items-center justify-center gap-2"
             >
-              {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <ShieldCheck className="h-4 w-4" />}
+              {isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <ShieldCheck className="h-4 w-4" />
+              )}
               Submit for Verification
             </button>
           </div>
