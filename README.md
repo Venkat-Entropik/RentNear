@@ -71,6 +71,7 @@ graph TB
     classDef ExtStyle fill:#faf5ff,stroke:#a855f7,stroke-width:2px,color:#3b0764,rx:6px,ry:6px;
 ```
 
+
 ## 💻 Tech Stack
 
 ### Frontend (`apps/web`)
