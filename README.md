@@ -46,7 +46,7 @@ graph TB
     UI -->|Uses State & Form hooks| State
     State -->|Triggers remote requests| APIClient
     
-    APIClient -->|HTTP Requests (REST API)| Controllers
+    <!-- APIClient -->|HTTP Requests (REST API)| Controllers -->
     APIClient <-->|Real-time Socket.io events| Controllers
     
     Controllers -->|Routes input data| Services
@@ -118,42 +118,146 @@ For app-specific architecture, request lifecycle, and data flow details:
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js `>= 20.0.0`
-- npm `>= 10.0.0`
-- PostgreSQL instance running locally or remotely
+
+| Dependency     | Minimum Version |
+| -------------- | --------------- |
+| **Node.js**    | `>= 20.0.0`     |
+| **npm**        | `>= 10.0.0`     |
+| **PostgreSQL** | `>= 14`         |
+
+Ensure a PostgreSQL instance is running locally (or accessible remotely). The default connection string expects:
+
+```
+postgresql://rentnear:rentnear@localhost:5432/rentnear_dev
+```
+
+---
 
 ### Installation
 
-1. **Clone the repository:**
-   ```bash
-   git clone <repo-url>
-   cd RentNear
-   ```
+**1. Clone the repository:**
+```bash
+git clone <repo-url>
+cd RentNear
+```
 
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
+**2. Install all dependencies (root, apps, and packages):**
+```bash
+npm install
+```
+> This uses npm workspaces — it installs deps for all packages under `apps/` and `packages/` into a single `node_modules` at the root.
 
-3. **Environment Setup:**
-   - Copy `apps/api/.env.example` to `apps/api/.env` and configure your database and third-party secrets.
-   - Copy `apps/web/.env.example` to `apps/web/.env` and update the necessary URLs/Keys.
+**3. Configure environment variables:**
+```bash
+# Copy the API environment template — edit it with your own secrets
+cp apps/api/.env.example apps/api/.env
+```
 
-4. **Database Migration:**
-   ```bash
-   cd apps/api
-   npm run prisma:generate
-   npm run prisma:migrate
-   ```
+| Variable                 | Required | Purpose                                                    |
+| ------------------------ | -------- | ---------------------------------------------------------- |
+| `DATABASE_URL`           | ✅       | PostgreSQL connection string                               |
+| `JWT_SECRET`             | ✅       | Secret key used to sign and verify JWT tokens              |
+| `CORS_ORIGINS`           | ✅       | Comma-separated allowed origins (e.g. `http://localhost:3000`) |
+| `R2_*`                   | ✅       | Cloudflare R2 / AWS S3 credentials for media uploads       |
+| `RAZORPAY_KEY_ID`        | ✅       | Razorpay payment gateway API key                           |
+| `RAZORPAY_KEY_SECRET`    | ✅       | Razorpay payment gateway API secret                        |
+
+> The frontend (`apps/web`) does **not** require a `.env` file by default — all runtime config is served by the Next.js server.
+
+**4. Set up the database:**
+
+```bash
+# Generate the Prisma client (creates Type-safe DB client from schema)
+npm run prisma:generate -w @rentnear/api
+
+# Apply database migrations (creates/updates tables in PostgreSQL)
+npm run prisma:migrate -w @rentnear/api
+```
+
+| Command                               | Purpose                                                                 |
+| ------------------------------------- | ----------------------------------------------------------------------- |
+| `prisma generate`                     | Generates the Prisma Client from `schema.prisma` — must run after every schema change |
+| `prisma migrate dev`                  | Creates and applies migrations to keep the database schema in sync      |
+| `prisma db push`                      | Pushes schema changes directly (without creating migration files)       |
+| `prisma studio`                       | Opens Prisma Studio — a GUI to browse and edit database data            |
+
+---
 
 ### Running the App
 
-To run both the frontend and backend in parallel using Turborepo from the root directory:
+All commands below are executed from the **repository root**.
+
+#### ▶️ Start both frontend and backend (development)
 
 ```bash
 npm run dev
 ```
-- **Web App**: `http://localhost:3000`
-- **API Server**: `http://localhost:8000` (or as configured in `.env`)
+
+This runs the `dev` script defined in the root `package.json`:
+
+```json
+"dev": "turbo run dev --parallel"
+```
+
+Turborepo runs all workspace `dev` scripts **in parallel**:
+- **`apps/web`** — `next dev -p 3000`
+- **`apps/api`** — `nest start --watch` (defaults to port `3001`)
+- **`packages/api-client`** — `tsc --watch` (recompiles the shared SDK on changes)
+- **`packages/types`** — `tsc --watch` (recompiles shared types on changes)
+
+| Service          | URL                                    |
+| ---------------- | -------------------------------------- |
+| **Web App**      | `http://localhost:3000`                |
+| **API Server**   | `http://localhost:3001/api/v1`         |
+
+> The API port can be changed by setting the `PORT` environment variable in `apps/api/.env`.
+
+#### ▶️ Start only the backend
+
+```bash
+npm run dev -w @rentnear/api
+```
+
+#### ▶️ Start only the frontend
+
+```bash
+npm run dev -w @rentnear/web
+```
+
+#### ▶️ Database GUI (Prisma Studio)
+
+```bash
+npm run prisma:studio -w @rentnear/api
+```
+
+This opens a browser-based database explorer at `http://localhost:5555`.
+
+---
+
+### Other Useful Commands
+
+| Command                          | Purpose                                                    |
+| -------------------------------- | ---------------------------------------------------------- |
+| `npm run build`                  | Build all apps and packages for production                 |
+| `npm run lint`                   | Run ESLint across all workspaces                           |
+| `npm run type-check`             | Run TypeScript type-checking across all workspaces         |
+| `npm run format`                 | Format all source files with Prettier                      |
+| `npm run clean`                  | Remove all build artifacts and `node_modules`              |
+
+---
+
+### Production Build
+
+```bash
+# Build everything
+npm run build
+
+# Start API in production mode
+npm run start:prod -w @rentnear/api
+
+# Start frontend in production mode
+npm run start -w @rentnear/web
+```
+The API production command (`start:prod`) runs the compiled `dist/main.js` directly via Node. The frontend production command (`start`) uses Next.js's built-in production server.
 
 ---

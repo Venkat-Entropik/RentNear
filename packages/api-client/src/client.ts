@@ -45,25 +45,101 @@ export function createApiClient(options: {
     return config;
   });
 
-  // ── Response interceptor — normalise errors ───────────────────────────────
+  // ── Response interceptor — auto-refresh on 401 + normalise errors ────────
+  let isRefreshing = false;
+  let refreshQueue: Array<(token: string) => void> = [];
+
   instance.interceptors.response.use(
     (response) => response,
-    (error: AxiosError<ApiError>) => {
-      // Re-throw with a structured error for the UI to handle
-      const message =
-        error.response?.data?.message ?? error.message ?? 'An unexpected error occurred';
-      const errorCode = error.response?.data?.error;
-      const normalised: ApiError = {
-        statusCode: error.response?.status ?? 0,
-        message,
-        ...(errorCode !== undefined && { error: errorCode }),
-      };
-      return Promise.reject(normalised);
+    async (error: AxiosError<ApiError>) => {
+      const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+
+      // Only attempt refresh for 401s that haven't been retried yet,
+      // and skip refresh endpoint itself to avoid infinite loop.
+      if (
+        error.response?.status === 401 &&
+        !originalRequest._retry &&
+        originalRequest.url !== '/auth/refresh'
+      ) {
+        originalRequest._retry = true;
+
+        const storage = (globalThis as any).localStorage;
+        const persisted = storage?.getItem('rentnear-auth');
+        const refreshToken = persisted ? JSON.parse(persisted)?.state?.refreshToken : null;
+
+        if (!refreshToken) {
+          // No refresh token — clear auth and reject
+          storage?.removeItem('rentnear-auth');
+          return Promise.reject(normaliseError(error));
+        }
+
+        if (isRefreshing) {
+          // Queue request until refresh completes
+          return new Promise((resolve) => {
+            refreshQueue.push((newToken: string) => {
+              originalRequest.headers.Authorization = `Bearer ${newToken}`;
+              resolve(instance(originalRequest));
+            });
+          });
+        }
+
+        isRefreshing = true;
+        try {
+          const res = await instance.post<{
+            accessToken: string;
+            refreshToken: string;
+            user: unknown;
+          }>('/auth/refresh', { refreshToken });
+
+          const { accessToken: newAccess, refreshToken: newRefresh } = res.data;
+
+          // Persist updated tokens to localStorage
+          if (storage && persisted) {
+            try {
+              const parsed = JSON.parse(persisted);
+              parsed.state.accessToken = newAccess;
+              parsed.state.refreshToken = newRefresh;
+              storage.setItem('rentnear-auth', JSON.stringify(parsed));
+            } catch {
+              // ignore parse errors
+            }
+          }
+
+          // Flush queued requests with the new token
+          refreshQueue.forEach((cb) => cb(newAccess));
+          refreshQueue = [];
+
+          // Retry original request with new token
+          originalRequest.headers.Authorization = `Bearer ${newAccess}`;
+          return instance(originalRequest);
+        } catch {
+          // Refresh failed — clear auth state (forces re-login)
+          storage?.removeItem('rentnear-auth');
+          refreshQueue = [];
+          return Promise.reject(normaliseError(error));
+        } finally {
+          isRefreshing = false;
+        }
+      }
+
+      return Promise.reject(normaliseError(error));
     },
   );
 
   return instance;
 }
+
+function normaliseError(error: AxiosError<ApiError>): ApiError {
+  const message =
+    error.response?.data?.message ?? error.message ?? 'An unexpected error occurred';
+  const errorCode = error.response?.data?.error;
+  return {
+    statusCode: error.response?.status ?? 0,
+    message,
+    ...(errorCode !== undefined && { error: errorCode }),
+  };
+}
+
 
 // ── Default client (uses env variable) ───────────────────────────────────────
 // Consumers can import this directly or create their own instance via
@@ -73,4 +149,17 @@ export const apiClient = createApiClient({
     typeof process !== 'undefined'
       ? (process.env['NEXT_PUBLIC_API_URL'] ?? 'http://localhost:3001/api/v1')
       : 'http://localhost:3001/api/v1',
+  getAccessToken: () => {
+    if (typeof globalThis === 'undefined') return null;
+    const storage = (globalThis as any).localStorage;
+    if (!storage) return null;
+    try {
+      const persisted = storage.getItem('rentnear-auth');
+      if (!persisted) return null;
+      const parsed = JSON.parse(persisted);
+      return parsed.state?.accessToken ?? null;
+    } catch {
+      return null;
+    }
+  },
 });

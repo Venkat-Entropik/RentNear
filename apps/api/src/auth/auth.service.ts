@@ -2,8 +2,9 @@
 // apps/api/src/auth/auth.service.ts
 //
 // Core auth business logic:
-//  1. sendOtp()   — Generate, hash, and store OTP; mock SMS dispatch.
-//  2. verifyOtp() — Validate OTP, upsert User, issue JWT tokens.
+//  1. sendOtp()     — Generate, hash, and store OTP; mock SMS dispatch.
+//  2. verifyOtp()   — Validate OTP, upsert User, issue JWT tokens.
+//  3. refreshToken()— Rotate refresh token and issue new access token.
 // ──────────────────────────────────────────────────────────────────────────────
 
 import {
@@ -158,6 +159,55 @@ export class AuthService {
     const { accessToken, refreshToken } = await this.issueTokenPair(user.id, user.phone, user.role);
 
     // ── Map Prisma user to public shape ───────────────────────────────────────
+    const userPublic: UserPublic = {
+      id: user.id,
+      phone: user.phone,
+      email: user.email,
+      name: user.name,
+      avatarUrl: user.avatarUrl,
+      role: user.role as Role,
+      kycStatus: user.kycStatus as KycStatus,
+      createdAt: user.createdAt.toISOString(),
+    };
+
+    return { accessToken, refreshToken, user: userPublic };
+  }
+
+  // ────────────────────────────────────────────────────────────────────────────
+  // REFRESH TOKEN
+  // ────────────────────────────────────────────────────────────────────────────
+
+  /**
+   * Validates the raw refresh token against stored hashes,
+   * rotates it (old token revoked, new pair issued), and returns
+   * fresh access + refresh tokens.
+   */
+  async refreshToken(rawRefreshToken: string): Promise<AuthTokenResponse> {
+    const { createHash } = require('crypto') as typeof import('crypto');
+    const tokenHash = createHash('sha256').update(rawRefreshToken).digest('hex');
+
+    const stored = await this.prisma.refreshToken.findFirst({
+      where: {
+        tokenHash,
+        expiresAt: { gt: new Date() },
+        revokedAt: null,
+      },
+      include: { user: true },
+    });
+
+    if (!stored) {
+      throw new UnauthorizedException('Invalid or expired refresh token.');
+    }
+
+    // Revoke old token (rotation — prevents reuse)
+    await this.prisma.refreshToken.update({
+      where: { id: stored.id },
+      data: { revokedAt: new Date() },
+    });
+
+    const { user } = stored;
+    const { accessToken, refreshToken } = await this.issueTokenPair(user.id, user.phone, user.role);
+
     const userPublic: UserPublic = {
       id: user.id,
       phone: user.phone,

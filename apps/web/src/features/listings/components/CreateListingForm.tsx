@@ -5,12 +5,12 @@
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ChevronRight, Loader2 } from 'lucide-react';
-import { createListingSchema, type CreateListingValues } from '../types';
+import { listingDetailsSchema, type CreateListingValues, type ListingDetailsValues } from '../types';
 import { useCategories } from '../hooks/useListings';
 
 interface CreateListingFormProps {
   defaultValues?: Partial<CreateListingValues>;
-  onNext: (values: CreateListingValues) => void;
+  onNext: (values: ListingDetailsValues) => void;
 }
 
 export function CreateListingForm({ defaultValues, onNext }: CreateListingFormProps) {
@@ -21,17 +21,18 @@ export function CreateListingForm({ defaultValues, onNext }: CreateListingFormPr
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreateListingValues>({
-    resolver: zodResolver(createListingSchema),
+  } = useForm<ListingDetailsValues>({
+    resolver: zodResolver(listingDetailsSchema),
     defaultValues: {
       categoryId: defaultValues?.categoryId ?? '',
       title: defaultValues?.title ?? '',
       description: defaultValues?.description ?? '',
-      // pricePerDay/deposit left undefined so inputs stay empty
+      ...(defaultValues?.pricePerDay !== undefined ? { pricePerDay: defaultValues.pricePerDay } : {}),
+      ...(defaultValues?.deposit !== undefined ? { deposit: defaultValues.deposit } : {}),
     },
   });
 
-  const onSubmit = (values: CreateListingValues) => onNext(values);
+  const onSubmit = (values: ListingDetailsValues) => onNext(values);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">

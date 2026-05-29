@@ -12,9 +12,11 @@ export const chatKeys = {
 };
 
 export function useConversations() {
+  const accessToken = useAuthStore((s) => s.accessToken);
   return useQuery({
     queryKey: chatKeys.conversations(),
     queryFn: getConversations,
+    enabled: !!accessToken,
   });
 }
 

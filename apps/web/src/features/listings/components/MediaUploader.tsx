@@ -13,6 +13,7 @@ import type { ListingMediaPublic } from '@rentnear/types';
 interface MediaUploaderProps {
   listingId: string;
   existingMedia: ListingMediaPublic[];
+  onUploaded?: () => void;
 }
 
 interface FileUploadState {
@@ -22,7 +23,7 @@ interface FileUploadState {
   previewUrl: string;
 }
 
-export function MediaUploader({ listingId, existingMedia }: MediaUploaderProps) {
+export function MediaUploader({ listingId, existingMedia, onUploaded }: MediaUploaderProps) {
   const [uploadQueue, setUploadQueue] = useState<FileUploadState[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -58,6 +59,8 @@ export function MediaUploader({ listingId, existingMedia }: MediaUploaderProps) 
             );
           },
         });
+
+        onUploaded?.();
 
         setUploadQueue((prev) =>
           prev.map((q) =>

@@ -19,6 +19,7 @@ import {
   confirmMedia,
   deleteMedia,
 } from '@rentnear/api-client';
+import { useAuthStore } from '@/features/auth/store/authStore';
 import type {
   CreateListingInput,
   UpdateListingInput,
@@ -58,7 +59,12 @@ export function useListing(id: string) {
 }
 
 export function useMyListings() {
-  return useQuery({ queryKey: listingKeys.mine, queryFn: getMyListings });
+  const accessToken = useAuthStore((s) => s.accessToken);
+  return useQuery({
+    queryKey: listingKeys.mine,
+    queryFn: getMyListings,
+    enabled: !!accessToken,
+  });
 }
 
 export function useCreateListing() {

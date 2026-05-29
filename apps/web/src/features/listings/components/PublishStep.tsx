@@ -2,6 +2,7 @@
 
 // PublishStep.tsx — Step 4: photo upload + publish
 
+import { useState } from 'react';
 import { ArrowLeft, Rocket, Loader2 } from 'lucide-react';
 import { MediaUploader } from './MediaUploader';
 import { usePublishListing } from '../hooks/useListings';
@@ -14,6 +15,7 @@ interface PublishStepProps {
 }
 
 export function PublishStep({ listing, onBack, onPublished }: PublishStepProps) {
+  const [uploadedCount, setUploadedCount] = useState(0);
   const { mutate: publish, isPending, error } = usePublishListing();
 
   return (
@@ -34,7 +36,11 @@ export function PublishStep({ listing, onBack, onPublished }: PublishStepProps) 
       </div>
 
       {/* Media uploader */}
-      <MediaUploader listingId={listing.id} existingMedia={listing.media} />
+      <MediaUploader
+        listingId={listing.id}
+        existingMedia={listing.media}
+        onUploaded={() => setUploadedCount((c) => c + 1)}
+      />
 
       {/* Error */}
       {error && (
@@ -46,7 +52,7 @@ export function PublishStep({ listing, onBack, onPublished }: PublishStepProps) 
       {/* Publish CTA */}
       <button
         type="button"
-        disabled={isPending || listing.media.length === 0}
+        disabled={isPending || listing.media.length + uploadedCount === 0}
         onClick={() => publish(listing.id, { onSuccess: onPublished })}
         className="btn-primary flex w-full items-center justify-center gap-2 disabled:opacity-50"
       >
@@ -54,7 +60,7 @@ export function PublishStep({ listing, onBack, onPublished }: PublishStepProps) 
         Publish Listing
       </button>
 
-      {listing.media.length === 0 && (
+      {listing.media.length + uploadedCount === 0 && (
         <p className="text-center text-xs text-neutral-400">Add at least 1 photo to publish</p>
       )}
     </div>

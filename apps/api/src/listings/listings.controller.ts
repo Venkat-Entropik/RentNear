@@ -62,19 +62,19 @@ export class ListingsController {
     return this.listingsService.findAll(q);
   }
 
-  /** GET /listings/:id */
-  @Get(':id')
-  async findOne(@Param('id') id: string): Promise<ListingPublic> {
-    return this.listingsService.findOne(id);
-  }
-
   // ── Protected routes ──────────────────────────────────────────────────────
 
-  /** GET /listings/mine — owner's listings */
+  /** GET /listings/mine — owner's listings (must be BEFORE /:id) */
   @Get('mine')
   @UseGuards(JwtAuthGuard)
   async findMine(@CurrentUser() user: JwtPayload): Promise<ListingPublic[]> {
     return this.listingsService.findMine(user.sub);
+  }
+
+  /** GET /listings/:id */
+  @Get(':id')
+  async findOne(@Param('id') id: string): Promise<ListingPublic> {
+    return this.listingsService.findOne(id);
   }
 
   /** POST /listings — create draft */

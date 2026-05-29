@@ -25,13 +25,15 @@ export class R2Service {
     const accessKeyId = this.config.get<string>('R2_ACCESS_KEY_ID', '');
     const secretAccessKey = this.config.get<string>('R2_SECRET_ACCESS_KEY', '');
 
-    this.bucket = this.config.get<string>('R2_BUCKET_NAME', 'rentnear-dev');
-    this.publicUrl = this.config.get<string>('R2_PUBLIC_URL', 'http://localhost:9000/rentnear-dev');
+    this.bucket = this.config.get<string>('R2_BUCKET_NAME', 'rentnear');
+    this.publicUrl = this.config.get<string>('R2_PUBLIC_URL', 'http://localhost:9000/rentnear');
 
     this.s3 = new S3Client({
       region: 'auto',
       endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
       credentials: { accessKeyId, secretAccessKey },
+      requestChecksumCalculation: 'WHEN_REQUIRED',
+      responseChecksumValidation: 'WHEN_REQUIRED',
     });
   }
 

@@ -31,3 +31,12 @@ export async function verifyOtp(payload: OtpVerifyPayload): Promise<AuthTokenRes
   const { data } = await apiClient.post<AuthTokenResponse>('/auth/verify-otp', payload);
   return data;
 }
+
+/**
+ * POST /auth/refresh
+ * Exchanges a valid refresh token for a new access + refresh token pair.
+ */
+export async function refreshAccessToken(refreshToken: string): Promise<AuthTokenResponse> {
+  const { data } = await apiClient.post<AuthTokenResponse>('/auth/refresh', { refreshToken });
+  return data;
+}

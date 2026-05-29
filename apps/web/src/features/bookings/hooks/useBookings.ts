@@ -5,6 +5,7 @@ import {
   getOwnerRequests,
   updateBookingStatus,
 } from '@rentnear/api-client';
+import { useAuthStore } from '@/features/auth/store/authStore';
 import type { CreateBookingInput, UpdateBookingStatusInput, BookingPublic } from '@rentnear/types';
 
 export const bookingsKeys = {
@@ -25,16 +26,20 @@ export function useCreateBooking() {
 }
 
 export function useMyTrips() {
+  const accessToken = useAuthStore((s) => s.accessToken);
   return useQuery({
     queryKey: bookingsKeys.trips(),
     queryFn: getMyTrips,
+    enabled: !!accessToken,
   });
 }
 
 export function useOwnerRequests() {
+  const accessToken = useAuthStore((s) => s.accessToken);
   return useQuery({
     queryKey: bookingsKeys.requests(),
     queryFn: getOwnerRequests,
+    enabled: !!accessToken,
   });
 }
 

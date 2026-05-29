@@ -11,7 +11,7 @@ import { useCreateListing, useUpdateListing } from './hooks/useListings';
 import { CreateListingForm } from './components/CreateListingForm';
 import { LocationStep } from './components/LocationStep';
 import { PublishStep } from './components/PublishStep';
-import type { CreateListingValues, CreateStep } from './types';
+import type { CreateListingValues, ListingDetailsValues, CreateStep } from './types';
 import type { ListingPublic } from '@rentnear/types';
 
 type PartialDetails = Partial<CreateListingValues>;
@@ -30,7 +30,7 @@ export function CreateListingView() {
   const stepIdx = STEPS.indexOf(step);
 
   // Step 1 → 2
-  const handleDetails = (values: CreateListingValues) => {
+  const handleDetails = (values: ListingDetailsValues) => {
     setDetails(values);
     setStep('location');
   };

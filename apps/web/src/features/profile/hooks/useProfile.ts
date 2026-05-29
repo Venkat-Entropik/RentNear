@@ -15,6 +15,7 @@ import {
   submitKyc,
   getKycStatus,
 } from '@rentnear/api-client';
+import { useAuthStore } from '@/features/auth/store/authStore';
 import type { UpdateProfileInput, CreateAddressInput, SubmitKycInput } from '@rentnear/types';
 
 // ── Query keys ────────────────────────────────────────────────────────────────
@@ -26,9 +27,11 @@ export const profileKeys = {
 
 // ── GET /users/me ─────────────────────────────────────────────────────────────
 export function useMe() {
+  const accessToken = useAuthStore((s) => s.accessToken);
   return useQuery({
     queryKey: profileKeys.me,
     queryFn: getMe,
+    enabled: !!accessToken, // only fetch when logged in
     staleTime: 5 * 60 * 1000, // 5 min
   });
 }
@@ -46,9 +49,11 @@ export function useUpdateProfile() {
 
 // ── GET /users/me/addresses ───────────────────────────────────────────────────
 export function useAddresses() {
+  const accessToken = useAuthStore((s) => s.accessToken);
   return useQuery({
     queryKey: profileKeys.addresses,
     queryFn: getAddresses,
+    enabled: !!accessToken,
   });
 }
 
@@ -88,8 +93,10 @@ export function useSubmitKyc() {
 
 // ── GET /users/me/kyc ─────────────────────────────────────────────────────────
 export function useKycStatus() {
+  const accessToken = useAuthStore((s) => s.accessToken);
   return useQuery({
     queryKey: profileKeys.kyc,
     queryFn: getKycStatus,
+    enabled: !!accessToken,
   });
 }

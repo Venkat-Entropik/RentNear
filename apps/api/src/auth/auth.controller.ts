@@ -14,6 +14,7 @@ import { ThrottlerGuard } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
 import { SendOtpDto } from './dto/send-otp.dto';
 import { VerifyOtpDto } from './dto/verify-otp.dto';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
 import type { SendOtpResponse, AuthTokenResponse } from '@rentnear/types';
 
 /**
@@ -66,5 +67,22 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async verifyOtp(@Body() dto: VerifyOtpDto): Promise<AuthTokenResponse> {
     return this.authService.verifyOtp(dto);
+  }
+
+  // ──────────────────────────────────────────────────────────────────────────
+  // POST /auth/refresh
+  // ──────────────────────────────────────────────────────────────────────────
+
+  /**
+   * Exchanges a valid refresh token for a fresh access + refresh token pair.
+   * Old refresh token is revoked immediately (rotation).
+   *
+   * @param dto - { refreshToken: string }
+   * @returns   - { accessToken, refreshToken, user }
+   */
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  async refresh(@Body() dto: RefreshTokenDto): Promise<AuthTokenResponse> {
+    return this.authService.refreshToken(dto.refreshToken);
   }
 }
